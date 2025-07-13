@@ -2,6 +2,8 @@ import styles from './App.module.css';
 import React, { type ReactNode } from 'react';
 import SearchSection from '../search-section/SearchSection.tsx';
 import SearchResult from '../search-result/SearchResult.tsx';
+import ErrorBoundary from '../error-boundary/ErrorBoundary.tsx';
+import ErrorButton from '../error-button/ErrorButton.tsx';
 
 type AppState = {
   searchText: string;
@@ -29,8 +31,11 @@ class App extends React.Component<Record<string, never>, AppState> {
       <>
         <div className={styles.app_wrapper}>
           <div className={styles.main}>
-            <SearchSection onSearch={this.handleSearch} />
-            <SearchResult searchText={this.state.searchText} />
+            <ErrorBoundary>
+              <SearchSection onSearch={this.handleSearch} />
+              <SearchResult searchText={this.state.searchText} />
+              <ErrorButton />
+            </ErrorBoundary>
           </div>
         </div>
       </>
