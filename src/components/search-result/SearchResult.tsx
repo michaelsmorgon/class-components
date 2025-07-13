@@ -8,6 +8,7 @@ type Props = {
 
 type State = {
   data: DataResult[];
+  isLoading: boolean;
 };
 
 class SearchResult extends React.Component<Props, State> {
@@ -16,44 +17,52 @@ class SearchResult extends React.Component<Props, State> {
 
     this.state = {
       data: [],
+      isLoading: false,
     };
   }
 
   async componentDidMount(): Promise<void> {
+    this.setState({ isLoading: true });
     const result = await fetchData(this.props.searchText);
-    this.setState({ data: result });
+    this.setState({ data: result, isLoading: false });
   }
 
   async componentDidUpdate(prevProps: Readonly<Props>): Promise<void> {
     if (prevProps.searchText !== this.props.searchText) {
+      this.setState({ isLoading: true });
       const result = await fetchData(this.props.searchText);
-      this.setState({ data: result });
+      this.setState({ data: result, isLoading: false });
     }
   }
 
   render(): React.ReactNode {
+    const { isLoading, data } = this.state;
     return (
       <>
         <div className={styles.search_result}>
-          <div className={styles.row}>
-            <div className={styles.cell}>
-              <strong>Name</strong>
-            </div>
-            <div className={styles.cell}>
-              <strong>Description</strong>
-            </div>
-          </div>
-          {this.state.data.map((item, index) => {
-            return (
-              <div className={styles.row} key={index}>
-                <div className={styles.cell}>{item.name}</div>
-                <div className={styles.cell}>
-                  Height: {item.height}; Weight: {item.weight}
-                </div>
+          {isLoading && <p>Loading...</p>}
+          {!isLoading && (
+            <div className={styles.row}>
+              <div className={styles.cell}>
+                <strong>Name</strong>
               </div>
-            );
-          })}
-          {this.state.data.length === 0 && (
+              <div className={styles.cell}>
+                <strong>Description</strong>
+              </div>
+            </div>
+          )}
+          {!isLoading &&
+            data.map((item, index) => {
+              return (
+                <div className={styles.row} key={index}>
+                  <div className={styles.cell}>{item.name}</div>
+                  <div className={styles.cell}>
+                    Height: {item.height}; Weight: {item.weight}
+                  </div>
+                </div>
+              );
+            })}
+          {!isLoading && data.length === 0 && (
             <div className={styles.row} key={0}>
               No data...
             </div>
