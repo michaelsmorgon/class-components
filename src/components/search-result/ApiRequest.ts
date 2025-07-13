@@ -27,41 +27,46 @@ type AdditionalResponse = {
 const fetchData = async (searchText: string): Promise<DataResult[]> => {
   if (searchText) {
     const res = await fetch(API_URL + `/${searchText}`);
+    checkRes(res);
     const data: AdditionalResponse = await res.json();
-    return [
-      {
-        ...data,
-      },
-    ];
+    return [{ ...data }];
   } else {
     const res = await fetch(API_URL);
+    checkRes(res);
     const data: Response = await res.json();
+
     if (Object.keys(data).length === 0) {
       return [];
     } else {
       const result = await Promise.all(
         data.results.map(async (value) => {
           const response = await fetch(value.url);
-          const result: AdditionalResponse = await response.json();
-          return result;
+          return await response.json();
         })
       )
         .then((results) => {
           const dataResult: DataResult[] = [];
-          results.map((value) => {
-            dataResult.push({
-              ...value,
-            });
-          });
+          results.map((value) => dataResult.push({ ...value }));
           return dataResult;
         })
-        .catch((error) => {
-          console.error('Error: ', error);
+        .catch(() => {
           return [];
         });
 
       return result;
     }
+  }
+};
+
+const checkRes = (res: globalThis.Response): void => {
+  if (res.status >= 400 && res.status < 500) {
+    console.log('>>> Client Error:', res.status);
+  } else if (res.status >= 500) {
+    console.log('>>> Server Error:', res.status);
+  }
+
+  if (!res.ok) {
+    throw new Error(`API error: ${res.status}`);
   }
 };
 

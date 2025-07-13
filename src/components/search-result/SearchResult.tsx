@@ -9,6 +9,7 @@ type Props = {
 type State = {
   data: DataResult[];
   isLoading: boolean;
+  error: string | null;
 };
 
 class SearchResult extends React.Component<Props, State> {
@@ -18,30 +19,44 @@ class SearchResult extends React.Component<Props, State> {
     this.state = {
       data: [],
       isLoading: false,
+      error: null,
     };
   }
 
   async componentDidMount(): Promise<void> {
-    this.setState({ isLoading: true });
-    const result = await fetchData(this.props.searchText);
-    this.setState({ data: result, isLoading: false });
+    await this.runFetch();
   }
 
   async componentDidUpdate(prevProps: Readonly<Props>): Promise<void> {
     if (prevProps.searchText !== this.props.searchText) {
+      await this.runFetch();
+    }
+  }
+
+  async runFetch(): Promise<void> {
+    try {
       this.setState({ isLoading: true });
       const result = await fetchData(this.props.searchText);
-      this.setState({ data: result, isLoading: false });
+      this.setState({ data: result, isLoading: false, error: null });
+    } catch (err) {
+      if (err instanceof Error) {
+        this.setState({ error: err.message, isLoading: false });
+        console.log('>>> Error: ', err);
+      } else {
+        this.setState({ error: 'Unexpected error', isLoading: false });
+        console.log('>>> Unknown error: ', err);
+      }
     }
   }
 
   render(): React.ReactNode {
-    const { isLoading, data } = this.state;
+    const { data, isLoading, error } = this.state;
     return (
       <>
         <div className={styles.search_result}>
           {isLoading && <p>Loading...</p>}
-          {!isLoading && (
+          {error && <p>Error Message: {error}</p>}
+          {!isLoading && !error && (
             <div className={styles.row}>
               <div className={styles.cell}>
                 <strong>Name</strong>
@@ -52,6 +67,7 @@ class SearchResult extends React.Component<Props, State> {
             </div>
           )}
           {!isLoading &&
+            !error &&
             data.map((item, index) => {
               return (
                 <div className={styles.row} key={index}>
@@ -62,7 +78,7 @@ class SearchResult extends React.Component<Props, State> {
                 </div>
               );
             })}
-          {!isLoading && data.length === 0 && (
+          {!isLoading && !error && data.length === 0 && (
             <div className={styles.row} key={0}>
               No data...
             </div>
