@@ -1,13 +1,37 @@
 import styles from './App.module.css';
 import React, { type ReactNode } from 'react';
-import Content from '../content/Content.tsx';
+import SearchSection from '../search-section/SearchSection.tsx';
+import SearchResult from '../search-result/SearchResult.tsx';
 
-class App extends React.Component {
+type AppState = {
+  searchText: string;
+};
+
+class App extends React.Component<Record<string, never>, AppState> {
+  LS_SEARCH_ROW = 'searchRow';
+
+  constructor(props: Record<string, never>) {
+    super(props);
+    const searchText = localStorage.getItem(this.LS_SEARCH_ROW) || '';
+    this.state = {
+      searchText,
+    };
+  }
+
+  handleSearch = (searchText: string): void => {
+    searchText = searchText.trim();
+    localStorage.setItem(this.LS_SEARCH_ROW, searchText);
+    this.setState({ searchText });
+  };
+
   render(): ReactNode {
     return (
       <>
         <div className={styles.app_wrapper}>
-          <Content />
+          <div className={styles.main}>
+            <SearchSection onSearch={this.handleSearch} />
+            <SearchResult searchText={this.state.searchText} />
+          </div>
         </div>
       </>
     );
