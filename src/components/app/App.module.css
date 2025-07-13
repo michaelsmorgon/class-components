@@ -1,0 +1,7 @@
+.app_wrapper {
+  display: block;
+  max-width: 1440px;
+  margin: 0 auto;
+  height: 100%;
+  background-color: #e5e5e5;
+}
