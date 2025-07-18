@@ -26,7 +26,9 @@ class SearchSection extends React.Component<Props, State> {
   };
 
   handleSearchClick = (): void => {
-    this.props.onSearch(this.state.searchRow);
+    const searchText = this.state.searchRow.trim();
+    localStorage.setItem(LS_SEARCH_ROW, searchText);
+    this.props.onSearch(searchText);
   };
 
   render(): ReactNode {

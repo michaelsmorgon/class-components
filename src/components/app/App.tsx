@@ -4,25 +4,22 @@ import SearchSection from '../search-section/SearchSection.tsx';
 import SearchResult from '../search-result/SearchResult.tsx';
 import ErrorBoundary from '../error-boundary/ErrorBoundary.tsx';
 import ErrorButton from '../error-button/ErrorButton.tsx';
+import { LS_SEARCH_ROW } from '../../utils/constants.ts';
 
 type AppState = {
   searchText: string;
 };
 
 class App extends React.Component<Record<string, never>, AppState> {
-  LS_SEARCH_ROW = 'searchRow';
-
   constructor(props: Record<string, never>) {
     super(props);
-    const searchText = localStorage.getItem(this.LS_SEARCH_ROW) || '';
+    const searchText = localStorage.getItem(LS_SEARCH_ROW) || '';
     this.state = {
       searchText,
     };
   }
 
   handleSearch = (searchText: string): void => {
-    searchText = searchText.trim();
-    localStorage.setItem(this.LS_SEARCH_ROW, searchText);
     this.setState({ searchText });
   };
 
