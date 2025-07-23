@@ -1,4 +1,4 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import styles from './SearchResult.module.css';
 import fetchData, { type DataResult } from './ApiRequest';
 
@@ -12,81 +12,65 @@ type State = {
   error: string | null;
 };
 
-class SearchResult extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+export default function SearchResult(props: Props) {
+  const [state, setState] = useState<State>({
+    data: [],
+    isLoading: false,
+    error: null,
+  });
 
-    this.state = {
-      data: [],
-      isLoading: false,
-      error: null,
-    };
-  }
-
-  async componentDidMount(): Promise<void> {
-    await this.runFetch();
-  }
-
-  async componentDidUpdate(prevProps: Readonly<Props>): Promise<void> {
-    if (prevProps.searchText !== this.props.searchText) {
-      await this.runFetch();
-    }
-  }
-
-  async runFetch(): Promise<void> {
-    try {
-      this.setState({ isLoading: true });
-      const result = await fetchData(this.props.searchText);
-      this.setState({ data: result, isLoading: false, error: null });
-    } catch (err) {
-      if (err instanceof Error) {
-        this.setState({ error: err.message, isLoading: false });
-        console.log('>>> Error: ', err);
-      } else {
-        this.setState({ error: 'Unexpected error', isLoading: false });
-        console.log('>>> Unknown error: ', err);
+  useEffect(() => {
+    const runFetch = async (): Promise<void> => {
+      try {
+        setState({ ...state, isLoading: true });
+        const result: DataResult[] = await fetchData(props.searchText);
+        setState({ data: result, isLoading: false, error: null });
+      } catch (err) {
+        if (err instanceof Error) {
+          setState({ data: [], error: err.message, isLoading: false });
+          console.log('>>> Error: ', err);
+        } else {
+          setState({ data: [], error: 'Unexpected error', isLoading: false });
+          console.log('>>> Unknown error: ', err);
+        }
       }
-    }
-  }
+    };
+    runFetch();
+  }, [state, props.searchText]);
 
-  render(): React.ReactNode {
-    const { data, isLoading, error } = this.state;
-    return (
-      <>
-        <div className={styles.search_result}>
-          {isLoading && <p>Loading...</p>}
-          {error && <p>Error Message: {error}</p>}
-          {!isLoading && !error && (
-            <div className={styles.row}>
-              <div className={styles.cell}>
-                <strong>Name</strong>
-              </div>
-              <div className={styles.cell}>
-                <strong>Description</strong>
-              </div>
+  return (
+    <>
+      <div className={styles.search_result}>
+        {state.isLoading && <p>Loading...</p>}
+        {state.error && <p>Error Message: {state.error}</p>}
+        {!state.isLoading && !state.error && (
+          <div className={styles.row}>
+            <div className={styles.cell}>
+              <strong>Name</strong>
             </div>
-          )}
-          {!isLoading &&
-            !error &&
-            data.map((item, index) => {
-              return (
-                <div className={styles.row} key={index}>
-                  <div className={styles.cell}>{item.name}</div>
-                  <div className={styles.cell}>
-                    Height: {item.height}; Weight: {item.weight}
-                  </div>
+            <div className={styles.cell}>
+              <strong>Description</strong>
+            </div>
+          </div>
+        )}
+        {!state.isLoading &&
+          !state.error &&
+          state.data.map((item, index) => {
+            return (
+              <div className={styles.row} key={index}>
+                <div className={styles.cell}>{item.name}</div>
+                <div className={styles.cell}>
+                  Height: {item.height}; Weight: {item.weight}
                 </div>
-              );
-            })}
-          {!isLoading && !error && data.length === 0 && (
-            <div className={styles.row} key={0}>
-              No data...
-            </div>
-          )}
-        </div>
-      </>
-    );
-  }
+              </div>
+            );
+          })}
+        {!state.isLoading && !state.error && state.data.length === 0 && (
+          <div className={styles.row} key={0}>
+            No data...
+          </div>
+        )}
+      </div>
+    </>
+  );
 }
-
-export default SearchResult;
