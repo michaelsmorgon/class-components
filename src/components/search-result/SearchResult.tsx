@@ -6,44 +6,40 @@ type Props = {
   searchText: string;
 };
 
-type State = {
-  data: DataResult[];
-  isLoading: boolean;
-  error: string | null;
-};
-
 export default function SearchResult(props: Props) {
-  const [state, setState] = useState<State>({
-    data: [],
-    isLoading: false,
-    error: null,
-  });
+  const [data, setData] = useState<DataResult[]>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const runFetch = async (): Promise<void> => {
       try {
-        setState({ ...state, isLoading: true });
+        setError(null);
+        setIsLoading(true);
         const result: DataResult[] = await fetchData(props.searchText);
-        setState({ data: result, isLoading: false, error: null });
+        setData(result);
+        setIsLoading(false);
       } catch (err) {
         if (err instanceof Error) {
-          setState({ data: [], error: err.message, isLoading: false });
+          setIsLoading(false);
+          setError(err.message);
           console.log('>>> Error: ', err);
         } else {
-          setState({ data: [], error: 'Unexpected error', isLoading: false });
+          setIsLoading(false);
+          setError('Unexpected error');
           console.log('>>> Unknown error: ', err);
         }
       }
     };
     runFetch();
-  }, [state, props.searchText]);
+  }, [props.searchText]);
 
   return (
     <>
       <div className={styles.search_result}>
-        {state.isLoading && <p>Loading...</p>}
-        {state.error && <p>Error Message: {state.error}</p>}
-        {!state.isLoading && !state.error && (
+        {isLoading && <p>Loading...</p>}
+        {error && <p>Error Message: {error}</p>}
+        {!isLoading && !error && (
           <div className={styles.row}>
             <div className={styles.cell}>
               <strong>Name</strong>
@@ -53,9 +49,9 @@ export default function SearchResult(props: Props) {
             </div>
           </div>
         )}
-        {!state.isLoading &&
-          !state.error &&
-          state.data.map((item, index) => {
+        {!isLoading &&
+          !error &&
+          data.map((item, index) => {
             return (
               <div className={styles.row} key={index}>
                 <div className={styles.cell}>{item.name}</div>
@@ -65,7 +61,7 @@ export default function SearchResult(props: Props) {
               </div>
             );
           })}
-        {!state.isLoading && !state.error && state.data.length === 0 && (
+        {!isLoading && !error && data.length === 0 && (
           <div className={styles.row} key={0}>
             No data...
           </div>
