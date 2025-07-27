@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './SearchSection.module.css';
+import { useLocalStorage } from '../../hooks/useLocalStorage';
 
 const LS_SEARCH_ROW = 'searchRow';
 
@@ -9,9 +10,8 @@ type Props = {
 
 export default function SearchSection(props: Props) {
   const PLACEHOLDER: string = 'Type text here...';
-  const [searchRow, setSearchRow] = useState(
-    localStorage.getItem(LS_SEARCH_ROW) || ''
-  );
+  const [storedValue, setStoredValue] = useLocalStorage(LS_SEARCH_ROW, '');
+  const [searchRow, setSearchRow] = useState(storedValue || '');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setSearchRow(e.target.value);
@@ -19,7 +19,7 @@ export default function SearchSection(props: Props) {
 
   const handleSearchClick = (): void => {
     const searchText = searchRow.trim();
-    localStorage.setItem(LS_SEARCH_ROW, searchText);
+    setStoredValue(searchText);
     props.onSearch(searchText);
   };
 
