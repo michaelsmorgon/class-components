@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
 import styles from './SearchResult.module.css';
-import fetchData, { type DataResult } from './ApiRequest';
+import fetchData, { type DataResult, type Result } from './ApiRequest';
 import DetailItem from '../detail-item/DetailItem';
-import { useParams } from 'react-router-dom';
+import { useParams, useSearchParams } from 'react-router-dom';
+import Pagination from '../pagination/Pagination';
+import { COUNT_PER_PAGE } from '../../utils/constants';
 
 type Props = {
   searchText: string;
@@ -10,17 +12,22 @@ type Props = {
 };
 
 export default function SearchResult(props: Props) {
-  const [data, setData] = useState<DataResult[]>([]);
+  const [data, setData] = useState<Result>({ count: 0, data: [] });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get('page') || '1';
 
   useEffect(() => {
     const runFetch = async (): Promise<void> => {
       try {
         setError(null);
         setIsLoading(true);
-        const result: DataResult[] = await fetchData(props.searchText);
+        const result: Result = await fetchData(
+          props.searchText,
+          parseInt(page)
+        );
         setData(result);
         setIsLoading(false);
       } catch (err) {
@@ -36,9 +43,9 @@ export default function SearchResult(props: Props) {
       }
     };
     runFetch();
-  }, [props.searchText]);
+  }, [props.searchText, page]);
 
-  const detailData = data.find((item) => item.name === id) || null;
+  const detailData = data.data.find((item) => item.name === id) || null;
   props.handleDetail(detailData);
 
   return (
@@ -48,10 +55,13 @@ export default function SearchResult(props: Props) {
         {error && <p>Error Message: {error}</p>}
         {!isLoading &&
           !error &&
-          data.map((item, index) => {
+          data.data.map((item, index) => {
             return <DetailItem item={item} key={index} />;
           })}
-        {!isLoading && !error && data.length === 0 && (
+        {!isLoading && !error && data.count >= COUNT_PER_PAGE && (
+          <Pagination page={page} />
+        )}
+        {!isLoading && !error && data.count === 0 && (
           <div className={styles.row} key={0}>
             No data...
           </div>

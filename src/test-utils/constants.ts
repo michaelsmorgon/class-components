@@ -5,5 +5,11 @@ export const BULBASAUR_NAME = 'bulbasaur';
 export const URL = 'https://pokeapi.co/api/v2/pokemon/';
 export const mockFetch = vi.fn();
 
-export const pikachuData = { name: PIKACHU_NAME, height: 4, weight: 60 };
-export const bulbasaurData = { name: BULBASAUR_NAME, height: 7, weight: 69 };
+export const pikachuData = {
+  count: 1,
+  data: { name: PIKACHU_NAME, height: 4, weight: 60 },
+};
+export const bulbasaurData = {
+  count: 1,
+  data: { name: BULBASAUR_NAME, height: 7, weight: 69 },
+};

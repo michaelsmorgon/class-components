@@ -3,6 +3,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import MainContent from './MainContent';
 import fetchData from '../search-result/ApiRequest';
 import { pikachuData } from '../../test-utils/constants';
+import { BrowserRouter } from 'react-router-dom';
 
 vi.mock('../search-result/ApiRequest', () => ({
   default: vi.fn(),
@@ -17,7 +18,11 @@ describe('Main component', () => {
   it('makes initial API call on mount', async () => {
     (fetchData as ReturnType<typeof vi.fn>).mockResolvedValueOnce(pikachuData);
 
-    render(<MainContent />);
+    render(
+      <BrowserRouter>
+        <MainContent />
+      </BrowserRouter>
+    );
 
     await waitFor(() => {
       expect(fetchData).toHaveBeenCalled();
@@ -29,7 +34,11 @@ describe('Main component', () => {
       () => new Promise(() => {})
     );
 
-    render(<MainContent />);
+    render(
+      <BrowserRouter>
+        <MainContent />
+      </BrowserRouter>
+    );
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
   });
 });

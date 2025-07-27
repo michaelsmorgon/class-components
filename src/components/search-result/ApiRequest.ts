@@ -1,5 +1,11 @@
+import { COUNT_PER_PAGE } from '../../utils/constants';
+
 const API_URL = 'https://pokeapi.co/api/v2/pokemon';
-const COUNT = 9;
+
+export type Result = {
+  count: number;
+  data: DataResult[];
+};
 
 export type DataResult = {
   name: string;
@@ -39,19 +45,26 @@ type AdditionalResponse = {
   };
 };
 
-const fetchData = async (searchText: string): Promise<DataResult[]> => {
+const fetchData = async (
+  searchText: string,
+  page?: number
+): Promise<Result> => {
+  const currentPage = page || 1;
   if (searchText) {
-    const res = await fetch(`${API_URL}/${searchText}?limit=${COUNT}`);
+    const res = await fetch(`${API_URL}/${searchText}`);
     checkRes(res);
     const data: AdditionalResponse = await res.json();
-    return [{ ...data }];
+    return { count: 1, data: [data] };
   } else {
-    const res = await fetch(`${API_URL}?limit=${COUNT}`);
+    const res = await fetch(
+      `${API_URL}?offset=${(currentPage - 1) * COUNT_PER_PAGE}&limit=${COUNT_PER_PAGE}`
+    );
     checkRes(res);
     const data: Response = await res.json();
+    console.log(data);
 
     if (Object.keys(data).length === 0) {
-      return [];
+      return { count: 0, data: [] };
     } else {
       const result = await Promise.all(
         data.results.map(async (value) => {
@@ -68,7 +81,7 @@ const fetchData = async (searchText: string): Promise<DataResult[]> => {
           return [];
         });
 
-      return result;
+      return { count: result.length, data: result };
     }
   }
 };

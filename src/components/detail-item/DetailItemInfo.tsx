@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import type { DataResult } from '../search-result/ApiRequest';
 import styles from './DetailItem.module.css';
 
@@ -9,6 +9,7 @@ type Props = {
 
 export default function DetailItemInfo(props: Props) {
   const navigate = useNavigate();
+  const location = useLocation();
   return (
     <div className={styles.info}>
       <div className={styles.header}>
@@ -21,7 +22,10 @@ export default function DetailItemInfo(props: Props) {
       </div>
       {props.showCloseBtn && (
         <div className={styles.btn_wrapper}>
-          <button className={styles.close_btn} onClick={() => navigate('..')}>
+          <button
+            className={styles.close_btn}
+            onClick={() => navigate('/' + location.search)}
+          >
             Close
           </button>
         </div>

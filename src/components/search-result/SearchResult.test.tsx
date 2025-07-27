@@ -1,7 +1,7 @@
 import { describe, it, expect, type Mock, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import SearchResult from './SearchResult';
-import fetchData, { type DataResult } from './ApiRequest';
+import fetchData, { type Result } from './ApiRequest';
 import { BrowserRouter } from 'react-router-dom';
 
 vi.mock('./ApiRequest', async () => ({
@@ -12,47 +12,50 @@ vi.mock('./ApiRequest', async () => ({
 const mockedFetchData = fetchData as Mock;
 
 describe('SearchResult component', (): void => {
-  const mockData: DataResult[] = [
-    {
-      name: 'bulbasaur',
-      height: 7,
-      weight: 69,
-      sprites: {
-        other: {
-          dream_world: {
-            front_default:
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg',
+  const mockData: Result = {
+    count: 3,
+    data: [
+      {
+        name: 'bulbasaur',
+        height: 7,
+        weight: 69,
+        sprites: {
+          other: {
+            dream_world: {
+              front_default:
+                'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg',
+            },
           },
         },
       },
-    },
-    {
-      name: 'charmander',
-      height: 6,
-      weight: 85,
-      sprites: {
-        other: {
-          dream_world: {
-            front_default:
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/4.svg',
+      {
+        name: 'charmander',
+        height: 6,
+        weight: 85,
+        sprites: {
+          other: {
+            dream_world: {
+              front_default:
+                'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/4.svg',
+            },
           },
         },
       },
-    },
-    {
-      name: 'pikachu',
-      height: 4,
-      weight: 99,
-      sprites: {
-        other: {
-          dream_world: {
-            front_default:
-              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/25.svg',
+      {
+        name: 'pikachu',
+        height: 4,
+        weight: 99,
+        sprites: {
+          other: {
+            dream_world: {
+              front_default:
+                'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/25.svg',
+            },
           },
         },
       },
-    },
-  ];
+    ],
+  };
 
   beforeEach(() => {
     mockedFetchData.mockReset();
@@ -77,7 +80,7 @@ describe('SearchResult component', (): void => {
   });
 
   it('displays "no results" message when data array is empty', async () => {
-    mockedFetchData.mockResolvedValueOnce([]);
+    mockedFetchData.mockResolvedValueOnce({ count: 0, data: [] });
     render(
       <BrowserRouter>
         <SearchResult searchText="" handleDetail={() => {}} />
@@ -105,21 +108,24 @@ describe('SearchResult component', (): void => {
   });
 
   it('correctly displays item names and descriptions', async () => {
-    mockedFetchData.mockResolvedValueOnce([
-      {
-        name: 'bulbasaur',
-        height: 7,
-        weight: 69,
-        sprites: {
-          other: {
-            dream_world: {
-              front_default:
-                'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg',
+    mockedFetchData.mockResolvedValueOnce({
+      count: 1,
+      data: [
+        {
+          name: 'bulbasaur',
+          height: 7,
+          weight: 69,
+          sprites: {
+            other: {
+              dream_world: {
+                front_default:
+                  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg',
+              },
             },
           },
         },
-      },
-    ]);
+      ],
+    });
     render(
       <BrowserRouter>
         <SearchResult searchText="" handleDetail={() => {}} />
@@ -134,20 +140,23 @@ describe('SearchResult component', (): void => {
   });
 
   it('handles missing or undefined data gracefully', async () => {
-    mockedFetchData.mockResolvedValueOnce([
-      {
-        name: '',
-        height: NaN,
-        weight: NaN,
-        sprites: {
-          other: {
-            dream_world: {
-              front_default: '',
+    mockedFetchData.mockResolvedValueOnce({
+      count: 1,
+      data: [
+        {
+          name: '',
+          height: NaN,
+          weight: NaN,
+          sprites: {
+            other: {
+              dream_world: {
+                front_default: '',
+              },
             },
           },
         },
-      },
-    ]);
+      ],
+    });
     render(
       <BrowserRouter>
         <SearchResult searchText="" handleDetail={() => {}} />

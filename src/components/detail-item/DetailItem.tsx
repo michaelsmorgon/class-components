@@ -1,7 +1,7 @@
 import styles from './DetailItem.module.css';
 import { type DataResult } from '../search-result/ApiRequest';
 import DetailItemInfo from './DetailItemInfo';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 
 type Props = {
   item: DataResult;
@@ -10,8 +10,11 @@ type Props = {
 export default function DetailItem(props: Props) {
   const imgPath = props.item.sprites.other.dream_world.front_default;
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const currentPage = parseInt(searchParams.get('page') || '1');
 
-  const handlerItemClick = () => navigate(`/details/${props.item.name}`);
+  const handlerItemClick = () =>
+    navigate(`/details/${props.item.name}?page=${currentPage}`);
 
   return (
     <div className={styles.wrapper} onClick={handlerItemClick}>
