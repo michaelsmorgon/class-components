@@ -2,6 +2,7 @@ import { describe, it, expect, type Mock, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import SearchResult from './SearchResult';
 import fetchData, { type DataResult } from './ApiRequest';
+import { BrowserRouter } from 'react-router-dom';
 
 vi.mock('./ApiRequest', async () => ({
   __esModule: true,
@@ -59,7 +60,11 @@ describe('SearchResult component', (): void => {
 
   it('Renders correct number of items when data is provided', async () => {
     mockedFetchData.mockResolvedValueOnce(mockData);
-    render(<SearchResult searchText="" />);
+    render(
+      <BrowserRouter>
+        <SearchResult searchText="" handleDetail={() => {}} />
+      </BrowserRouter>
+    );
 
     await waitFor(() => {
       expect(screen.getByText('bulbasaur')).toBeInTheDocument();
@@ -73,7 +78,11 @@ describe('SearchResult component', (): void => {
 
   it('displays "no results" message when data array is empty', async () => {
     mockedFetchData.mockResolvedValueOnce([]);
-    render(<SearchResult searchText="" />);
+    render(
+      <BrowserRouter>
+        <SearchResult searchText="" handleDetail={() => {}} />
+      </BrowserRouter>
+    );
 
     await waitFor(() => {
       expect(screen.getByText(/no data/i)).toBeInTheDocument();
@@ -82,7 +91,11 @@ describe('SearchResult component', (): void => {
 
   it('shows loading state while fetching data', async () => {
     mockedFetchData.mockResolvedValueOnce(mockData);
-    render(<SearchResult searchText="" />);
+    render(
+      <BrowserRouter>
+        <SearchResult searchText="" handleDetail={() => {}} />
+      </BrowserRouter>
+    );
 
     expect(screen.getByText(/loading.../i)).toBeInTheDocument();
 
@@ -107,7 +120,11 @@ describe('SearchResult component', (): void => {
         },
       },
     ]);
-    render(<SearchResult searchText="" />);
+    render(
+      <BrowserRouter>
+        <SearchResult searchText="" handleDetail={() => {}} />
+      </BrowserRouter>
+    );
 
     expect(
       await screen.findByRole('heading', { level: 2, name: /bulbasaur/i })
@@ -131,7 +148,11 @@ describe('SearchResult component', (): void => {
         },
       },
     ]);
-    render(<SearchResult searchText="" />);
+    render(
+      <BrowserRouter>
+        <SearchResult searchText="" handleDetail={() => {}} />
+      </BrowserRouter>
+    );
 
     await waitFor(() => {
       expect(screen.getByText(/height: NaN/i)).toBeInTheDocument();
@@ -141,7 +162,11 @@ describe('SearchResult component', (): void => {
 
   it('displays error message when API call fails', async () => {
     mockedFetchData.mockRejectedValueOnce(new Error('Test error'));
-    render(<SearchResult searchText="" />);
+    render(
+      <BrowserRouter>
+        <SearchResult searchText="" handleDetail={() => {}} />
+      </BrowserRouter>
+    );
 
     await waitFor(() => {
       expect(
@@ -152,7 +177,11 @@ describe('SearchResult component', (): void => {
 
   it('shows appropriate error for different HTTP status codes (4xx, 5xx)', async () => {
     mockedFetchData.mockRejectedValueOnce(new Error('API error: 404'));
-    render(<SearchResult searchText="error 404" />);
+    render(
+      <BrowserRouter>
+        <SearchResult searchText="" handleDetail={() => {}} />
+      </BrowserRouter>
+    );
 
     await waitFor(() => {
       expect(
