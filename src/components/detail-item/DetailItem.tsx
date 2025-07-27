@@ -1,5 +1,7 @@
 import styles from './DetailItem.module.css';
 import { type DataResult } from '../search-result/ApiRequest';
+import DetailItemInfo from './DetailItemInfo';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   item: DataResult;
@@ -7,8 +9,12 @@ type Props = {
 
 export default function DetailItem(props: Props) {
   const imgPath = props.item.sprites.other.dream_world.front_default;
+  const navigate = useNavigate();
+
+  const handlerItemClick = () => navigate(`/details/${props.item.name}`);
+
   return (
-    <div className={styles.wrapper}>
+    <div className={styles.wrapper} onClick={handlerItemClick}>
       <div className={styles.item}>
         <div className={styles.item_info}>
           <img
@@ -16,16 +22,7 @@ export default function DetailItem(props: Props) {
             alt={props.item.name}
             className={styles.item_img}
           />
-          <div className={styles.info}>
-            <div className={styles.header}>
-              <h2 className={styles.title}>{props.item.name}</h2>
-            </div>
-            <span className={styles.title_desc}>Description:</span>
-            <div className={styles.stat_wrapper}>
-              <div>Height: {props.item.height}</div>
-              <div>Weight: {props.item.weight}</div>
-            </div>
-          </div>
+          <DetailItemInfo item={props.item} />
         </div>
       </div>
     </div>

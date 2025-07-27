@@ -5,10 +5,18 @@
   flex-direction: column;
 }
 
-.main_detail {
+.main_result {
   display: flex;
   padding: 10px;
   flex-direction: row;
   justify-content: center;
   width: 100%;
+}
+
+.main_detail {
+  display: flex;
+  flex-direction: column;
+  width: 25%;
+  padding: 30px 0;
+  align-items: center;
 }

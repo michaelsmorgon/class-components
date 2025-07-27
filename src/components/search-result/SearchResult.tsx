@@ -2,15 +2,18 @@ import { useEffect, useState } from 'react';
 import styles from './SearchResult.module.css';
 import fetchData, { type DataResult } from './ApiRequest';
 import DetailItem from '../detail-item/DetailItem';
+import { useParams } from 'react-router-dom';
 
 type Props = {
   searchText: string;
+  handleDetail: (data: DataResult | null) => void;
 };
 
 export default function SearchResult(props: Props) {
   const [data, setData] = useState<DataResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const { id } = useParams<{ id: string }>();
 
   useEffect(() => {
     const runFetch = async (): Promise<void> => {
@@ -34,6 +37,9 @@ export default function SearchResult(props: Props) {
     };
     runFetch();
   }, [props.searchText]);
+
+  const detailData = data.find((item) => item.name === id) || null;
+  props.handleDetail(detailData);
 
   return (
     <>
