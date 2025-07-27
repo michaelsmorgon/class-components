@@ -1,9 +1,17 @@
 const API_URL = 'https://pokeapi.co/api/v2/pokemon';
+const COUNT = 9;
 
 export type DataResult = {
   name: string;
   height: number;
   weight: number;
+  sprites: {
+    other: {
+      dream_world: {
+        front_default: string | null;
+      };
+    };
+  };
 };
 
 type Response = {
@@ -22,16 +30,23 @@ type AdditionalResponse = {
   name: string;
   weight: number;
   height: number;
+  sprites: {
+    other: {
+      dream_world: {
+        front_default: string | null;
+      };
+    };
+  };
 };
 
 const fetchData = async (searchText: string): Promise<DataResult[]> => {
   if (searchText) {
-    const res = await fetch(API_URL + `/${searchText}`);
+    const res = await fetch(`${API_URL}/${searchText}?limit=${COUNT}`);
     checkRes(res);
     const data: AdditionalResponse = await res.json();
     return [{ ...data }];
   } else {
-    const res = await fetch(API_URL);
+    const res = await fetch(`${API_URL}?limit=${COUNT}`);
     checkRes(res);
     const data: Response = await res.json();
 

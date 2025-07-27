@@ -1,8 +1,7 @@
 .search_result {
-  width: 50%;
   padding: 10px;
   display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
 }
 
 .row {
