@@ -1,4 +1,4 @@
-import { useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import styles from './Pagination.module.css';
 
 type Props = {
@@ -6,12 +6,11 @@ type Props = {
 };
 
 export default function Pagination({ page }: Props) {
-  const [searchParams, setSearchParams] = useSearchParams();
   const currentPage = parseInt(page);
+  const navigate = useNavigate();
 
   const changePage = (newPage: number) => {
-    searchParams.set('page', newPage.toString());
-    setSearchParams(searchParams);
+    navigate(`/?page=${newPage.toString()}`);
   };
 
   return (

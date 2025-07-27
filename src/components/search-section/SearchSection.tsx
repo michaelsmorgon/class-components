@@ -20,10 +20,14 @@ export default function SearchSection(props: Props) {
   };
 
   const handleSearchClick = (): void => {
-    navigation('/');
     const searchText = searchRow.trim();
     setStoredValue(searchText);
     props.onSearch(searchText);
+    if (searchText) {
+      navigation(`/?search=${searchText}`);
+    } else {
+      navigation('/');
+    }
   };
 
   return (
