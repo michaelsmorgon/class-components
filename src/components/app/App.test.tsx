@@ -43,6 +43,6 @@ describe('App routing', () => {
         <App />
       </MemoryRouter>
     );
-    expect(screen.getByText(/not found/i)).toBeInTheDocument();
+    expect(screen.getByText(/Sorry, smth went wrong/i)).toBeInTheDocument();
   });
 });

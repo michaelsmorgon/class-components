@@ -40,7 +40,7 @@ describe('fetchData', () => {
     });
 
     const result = await fetchData(PIKACHU_NAME);
-    expect(mockFetch).toHaveBeenCalledWith(URL + PIKACHU_NAME);
+    expect(mockFetch).toHaveBeenCalledWith(URL + PIKACHU_NAME + '?limit=9');
     expect(result).toEqual([mockSuccessResponse]);
   });
 

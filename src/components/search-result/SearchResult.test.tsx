@@ -12,9 +12,45 @@ const mockedFetchData = fetchData as Mock;
 
 describe('SearchResult component', (): void => {
   const mockData: DataResult[] = [
-    { name: 'bulbasaur', height: 7, weight: 69 },
-    { name: 'charmander', height: 6, weight: 85 },
-    { name: 'pikachu', height: 4, weight: 99 },
+    {
+      name: 'bulbasaur',
+      height: 7,
+      weight: 69,
+      sprites: {
+        other: {
+          dream_world: {
+            front_default:
+              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg',
+          },
+        },
+      },
+    },
+    {
+      name: 'charmander',
+      height: 6,
+      weight: 85,
+      sprites: {
+        other: {
+          dream_world: {
+            front_default:
+              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/4.svg',
+          },
+        },
+      },
+    },
+    {
+      name: 'pikachu',
+      height: 4,
+      weight: 99,
+      sprites: {
+        other: {
+          dream_world: {
+            front_default:
+              'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/25.svg',
+          },
+        },
+      },
+    },
   ];
 
   beforeEach(() => {
@@ -57,20 +93,43 @@ describe('SearchResult component', (): void => {
 
   it('correctly displays item names and descriptions', async () => {
     mockedFetchData.mockResolvedValueOnce([
-      { name: 'bulbasaur', height: 7, weight: 69 },
+      {
+        name: 'bulbasaur',
+        height: 7,
+        weight: 69,
+        sprites: {
+          other: {
+            dream_world: {
+              front_default:
+                'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg',
+            },
+          },
+        },
+      },
     ]);
     render(<SearchResult searchText="" />);
 
-    await waitFor(() => {
-      expect(screen.getByText('bulbasaur')).toBeInTheDocument();
-      expect(screen.getByText(/height: 7/i)).toBeInTheDocument();
-      expect(screen.getByText(/weight: 69/i)).toBeInTheDocument();
-    });
+    expect(
+      await screen.findByRole('heading', { level: 2, name: /bulbasaur/i })
+    ).toBeInTheDocument();
+    expect(await screen.findByText(/height: 7/i)).toBeInTheDocument();
+    expect(await screen.findByText(/weight: 69/i)).toBeInTheDocument();
   });
 
   it('handles missing or undefined data gracefully', async () => {
     mockedFetchData.mockResolvedValueOnce([
-      { name: '', height: NaN, weight: NaN },
+      {
+        name: '',
+        height: NaN,
+        weight: NaN,
+        sprites: {
+          other: {
+            dream_world: {
+              front_default: '',
+            },
+          },
+        },
+      },
     ]);
     render(<SearchResult searchText="" />);
 
