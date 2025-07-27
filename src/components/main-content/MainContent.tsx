@@ -4,7 +4,7 @@ import SearchSection from '../search-section/SearchSection';
 import styles from './MainContent.module.css';
 import { LS_SEARCH_ROW } from '../../utils/constants';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { type DataResult } from '../search-result/ApiRequest';
 import DetailItemInfo from '../detail-item/DetailItemInfo';
 
@@ -16,10 +16,10 @@ export default function MainContent() {
     setStoredValue(searchText);
   };
 
-  const handleDetail = (data: DataResult | null) => {
+  const handleDetail = useCallback((data: DataResult | null) => {
     setDetailData(data);
-  };
-
+  }, []);
+  console.log('-----------', detailData);
   return (
     <div className={styles.main}>
       <ErrorBoundary>
@@ -28,7 +28,11 @@ export default function MainContent() {
           <SearchResult searchText={storedValue} handleDetail={handleDetail} />
           {detailData && (
             <div className={styles.main_detail}>
-              <DetailItemInfo item={detailData} showCloseBtn={true} />
+              <DetailItemInfo
+                item={detailData}
+                handleDetail={handleDetail}
+                showCloseBtn={true}
+              />
             </div>
           )}
         </div>

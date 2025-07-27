@@ -5,6 +5,11 @@
   justify-content: center;
 }
 
+.loading {
+  text-align: center;
+  width: 100%;
+}
+
 .row {
   display: flex;
   width: 100%;

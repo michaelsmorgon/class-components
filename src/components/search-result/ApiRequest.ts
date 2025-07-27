@@ -45,6 +45,13 @@ type AdditionalResponse = {
   };
 };
 
+const getDetailInfo = async (id: string) => {
+  const res = await fetch(`${API_URL}/${id}`);
+  checkRes(res);
+  const data: DataResult = await res.json();
+  return data;
+};
+
 const fetchData = async (
   searchText: string,
   page?: number
@@ -98,3 +105,4 @@ const checkRes = (res: globalThis.Response): void => {
 };
 
 export default fetchData;
+export { getDetailInfo };

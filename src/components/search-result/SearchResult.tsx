@@ -1,6 +1,10 @@
 import { useEffect, useState } from 'react';
 import styles from './SearchResult.module.css';
-import fetchData, { type DataResult, type Result } from './ApiRequest';
+import fetchData, {
+  getDetailInfo,
+  type DataResult,
+  type Result,
+} from './ApiRequest';
 import DetailItem from '../detail-item/DetailItem';
 import { useParams, useSearchParams } from 'react-router-dom';
 import Pagination from '../pagination/Pagination';
@@ -14,10 +18,12 @@ type Props = {
 export default function SearchResult(props: Props) {
   const [data, setData] = useState<Result>({ count: 0, data: [] });
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') || '1';
+  const { handleDetail } = props;
 
   useEffect(() => {
     const runFetch = async (): Promise<void> => {
@@ -45,13 +51,36 @@ export default function SearchResult(props: Props) {
     runFetch();
   }, [props.searchText, page]);
 
-  const detailData = data.data.find((item) => item.name === id) || null;
-  props.handleDetail(detailData);
+  useEffect(() => {
+    const runFetch = async (): Promise<void> => {
+      try {
+        if (id) {
+          handleDetail(null);
+          setIsLoadingDetail(true);
+          const result: DataResult = await getDetailInfo(id);
+          handleDetail(result);
+          setIsLoadingDetail(false);
+        }
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+          console.log('>>> Error: ', err);
+        } else {
+          setError('Unexpected error');
+          console.log('>>> Unknown error: ', err);
+        }
+      }
+    };
+    runFetch();
+  }, [handleDetail, id]);
 
   return (
     <>
       <div className={styles.search_result}>
-        {isLoading && <p>Loading...</p>}
+        <div className={styles.loading}>
+          {isLoading && <p>Loading...</p>}
+          {isLoadingDetail && <p>Loading...</p>}
+        </div>
         {error && <p>Error Message: {error}</p>}
         {!isLoading &&
           !error &&

@@ -5,11 +5,20 @@ import styles from './DetailItem.module.css';
 type Props = {
   item: DataResult;
   showCloseBtn?: boolean;
+  handleDetail?: (data: DataResult | null) => void;
 };
 
 export default function DetailItemInfo(props: Props) {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleClose = () => {
+    if (props.handleDetail) {
+      props.handleDetail(null);
+    }
+    navigate('/' + location.search);
+  };
+
   return (
     <div className={styles.info}>
       <div className={styles.header}>
@@ -22,10 +31,7 @@ export default function DetailItemInfo(props: Props) {
       </div>
       {props.showCloseBtn && (
         <div className={styles.btn_wrapper}>
-          <button
-            className={styles.close_btn}
-            onClick={() => navigate('/' + location.search)}
-          >
+          <button className={styles.close_btn} onClick={handleClose}>
             Close
           </button>
         </div>
