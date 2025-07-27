@@ -1,5 +1,6 @@
 import styles from './App.module.css';
 import { Route, Routes } from 'react-router-dom';
+import AboutPage from '../about-page/AboutPage.tsx';
 import MainLayout from '../main-layout/MainLayout.tsx';
 import MainContent from '../main-content/MainContent.tsx';
 
@@ -9,6 +10,9 @@ export default function App() {
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<MainContent />} />
+          <Route path="details/:id" element={<MainContent />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="*" element={<p>Not Found</p>} />
         </Route>
       </Routes>
     </div>
