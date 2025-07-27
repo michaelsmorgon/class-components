@@ -4,3 +4,11 @@
   align-items: center;
   flex-direction: column;
 }
+
+.main_detail {
+  display: flex;
+  padding: 10px;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
+}

@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from './SearchResult.module.css';
 import fetchData, { type DataResult } from './ApiRequest';
+import DetailItem from './DetailItem';
 
 type Props = {
   searchText: string;
@@ -52,14 +53,7 @@ export default function SearchResult(props: Props) {
         {!isLoading &&
           !error &&
           data.map((item, index) => {
-            return (
-              <div className={styles.row} key={index}>
-                <div className={styles.cell}>{item.name}</div>
-                <div className={styles.cell}>
-                  Height: {item.height}; Weight: {item.weight}
-                </div>
-              </div>
-            );
+            return <DetailItem item={item} key={index} />;
           })}
         {!isLoading && !error && data.length === 0 && (
           <div className={styles.row} key={0}>

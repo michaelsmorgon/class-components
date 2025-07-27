@@ -16,7 +16,9 @@ export default function MainContent() {
     <div className={styles.main}>
       <ErrorBoundary>
         <SearchSection onSearch={handleSearch} />
-        <SearchResult searchText={storedValue} />
+        <div className={styles.main_detail}>
+          <SearchResult searchText={storedValue} />
+        </div>
       </ErrorBoundary>
     </div>
   );
