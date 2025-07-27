@@ -3,6 +3,7 @@ import { Route, Routes } from 'react-router-dom';
 import AboutPage from '../about-page/AboutPage.tsx';
 import MainLayout from '../main-layout/MainLayout.tsx';
 import MainContent from '../main-content/MainContent.tsx';
+import NotFound from '../not-found/NotFound.tsx';
 
 export default function App() {
   return (
@@ -12,7 +13,7 @@ export default function App() {
           <Route index element={<MainContent />} />
           <Route path="details/:id" element={<MainContent />} />
           <Route path="about" element={<AboutPage />} />
-          <Route path="*" element={<p>Not Found</p>} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
     </div>
