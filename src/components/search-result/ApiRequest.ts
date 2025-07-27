@@ -61,7 +61,6 @@ const fetchData = async (
     );
     checkRes(res);
     const data: Response = await res.json();
-    console.log(data);
 
     if (Object.keys(data).length === 0) {
       return { count: 0, data: [] };
