@@ -6,9 +6,17 @@ body {
 body {
   margin: 0;
   font-family: Roboto, 'Helvetica Neue', sans-serif;
+  color: #2d2d2d;
+  background-color: #f4f4f4;
 }
 
 #root {
   display: block;
   width: 100%;
+}
+
+.active {
+  color: #ffffff;
+  text-decoration: none;
+  cursor: default;
 }
