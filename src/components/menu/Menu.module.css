@@ -1,0 +1,49 @@
+nav {
+  background-color: var(--color-nav-bg);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav a {
+  margin: 15px;
+}
+
+nav a.active:hover {
+  color: var(--color-white);
+  text-decoration: none;
+  cursor: default;
+}
+
+.links {
+  display: flex;
+  gap: 15px;
+}
+
+.link {
+  color: var(--color-link);
+  text-decoration: none;
+  font-family: Roboto, sans-serif;
+  font-size: 18px;
+}
+
+.link:hover {
+  color: var(--color-link-hover);
+}
+
+.themeToggleBtn {
+  background-color: var(--color-btn-bg);
+  color: var(--color-white);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
+}
+
+.themeToggleBtn:hover {
+  background-color: var(--color-btn-bg-hover);
+}

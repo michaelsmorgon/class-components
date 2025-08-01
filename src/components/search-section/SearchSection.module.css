@@ -17,8 +17,9 @@
   line-height: 12px;
   letter-spacing: 0em;
   text-align: left;
-  color: black;
+  color: var(--color-text);
   border: none;
+  background-color: var(--color-info-bg);
 }
 
 .input:focus {
@@ -32,11 +33,11 @@
   line-height: 14px;
   letter-spacing: 0em;
   text-align: center;
-  color: #ffffff;
+  color: var(--color-white);
   border: none;
-  background-color: #2f80ed;
+  background-color: var(--color-btn-bg);
   border-radius: 5px;
-  box-shadow: 2px 0px 4px 0px #2f80ed;
+  box-shadow: 2px 0px 4px 0px var(--color-btn-bg);
   width: 150px;
   height: 37px;
 }
@@ -44,10 +45,10 @@
 .search_btn:hover {
   cursor: pointer;
   box-shadow: none;
-  background-color: #5ea2ff;
+  background-color: var(--color-btn-bg-hover);
 }
 
 .search_btn:active {
-  background-color: #2980b9;
+  background-color: var(--color-btn-bg-active);
   transform: scale(0.98);
 }

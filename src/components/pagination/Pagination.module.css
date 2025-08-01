@@ -22,24 +22,24 @@
   border-radius: 18px;
   border: none;
   margin-top: auto;
-  background-color: #2f80ed;
+  background-color: var(--color-btn-bg);
   font-family: Roboto;
   font-size: 26px;
   font-weight: 400;
   line-height: 14px;
   letter-spacing: 0em;
   text-align: center;
-  color: #ffffff;
+  color: var(--color-white);
 }
 
 .paginator_btn:hover:not(:disabled) {
   cursor: pointer;
   box-shadow: none;
-  background-color: #5ea2ff;
+  background-color: var(--color-btn-bg-hover)
 }
 
 .paginator_btn:disabled {
-  background-color: #b1b1b1;
+  background-color: var(--color-disabled);
   cursor: default;
   box-shadow: none;
 }
