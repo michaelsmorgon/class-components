@@ -4,7 +4,7 @@ import AboutPage from '../about-page/AboutPage.tsx';
 import MainLayout from '../main-layout/MainLayout.tsx';
 import MainContent from '../main-content/MainContent.tsx';
 import NotFound from '../not-found/NotFound.tsx';
-import { ThemeProvider } from '../../context/ThemeContext.tsx';
+import { ThemeProvider } from '../theme-provider/ThemeProvider.tsx';
 
 export default function App() {
   return (
