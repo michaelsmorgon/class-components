@@ -19,7 +19,6 @@ export default function MainContent() {
   const handleDetail = useCallback((data: DataResult | null) => {
     setDetailData(data);
   }, []);
-  console.log('-----------', detailData);
   return (
     <div className={styles.main}>
       <ErrorBoundary>
