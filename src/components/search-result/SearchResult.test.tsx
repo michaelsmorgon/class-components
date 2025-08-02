@@ -3,6 +3,8 @@ import { render, screen, waitFor } from '@testing-library/react';
 import SearchResult from './SearchResult';
 import fetchData, { type Result } from './ApiRequest';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from '../../redux/Store';
 
 vi.mock('./ApiRequest', async () => ({
   __esModule: true,
@@ -64,9 +66,11 @@ describe('SearchResult component', (): void => {
   it('Renders correct number of items when data is provided', async () => {
     mockedFetchData.mockResolvedValueOnce(mockData);
     render(
-      <BrowserRouter>
-        <SearchResult searchText="" handleDetail={() => {}} />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <SearchResult searchText="" handleDetail={() => {}} />
+        </BrowserRouter>
+      </Provider>
     );
 
     await waitFor(() => {
@@ -82,9 +86,11 @@ describe('SearchResult component', (): void => {
   it('displays "no results" message when data array is empty', async () => {
     mockedFetchData.mockResolvedValueOnce({ count: 0, data: [] });
     render(
-      <BrowserRouter>
-        <SearchResult searchText="" handleDetail={() => {}} />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <SearchResult searchText="" handleDetail={() => {}} />
+        </BrowserRouter>
+      </Provider>
     );
 
     await waitFor(() => {
@@ -95,9 +101,11 @@ describe('SearchResult component', (): void => {
   it('shows loading state while fetching data', async () => {
     mockedFetchData.mockResolvedValueOnce(mockData);
     render(
-      <BrowserRouter>
-        <SearchResult searchText="" handleDetail={() => {}} />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <SearchResult searchText="" handleDetail={() => {}} />
+        </BrowserRouter>
+      </Provider>
     );
 
     expect(screen.getByText(/loading.../i)).toBeInTheDocument();
@@ -127,9 +135,11 @@ describe('SearchResult component', (): void => {
       ],
     });
     render(
-      <BrowserRouter>
-        <SearchResult searchText="" handleDetail={() => {}} />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <SearchResult searchText="" handleDetail={() => {}} />
+        </BrowserRouter>
+      </Provider>
     );
 
     expect(
@@ -158,9 +168,11 @@ describe('SearchResult component', (): void => {
       ],
     });
     render(
-      <BrowserRouter>
-        <SearchResult searchText="" handleDetail={() => {}} />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <SearchResult searchText="" handleDetail={() => {}} />
+        </BrowserRouter>
+      </Provider>
     );
 
     await waitFor(() => {
@@ -172,9 +184,11 @@ describe('SearchResult component', (): void => {
   it('displays error message when API call fails', async () => {
     mockedFetchData.mockRejectedValueOnce(new Error('Test error'));
     render(
-      <BrowserRouter>
-        <SearchResult searchText="" handleDetail={() => {}} />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <SearchResult searchText="" handleDetail={() => {}} />
+        </BrowserRouter>
+      </Provider>
     );
 
     await waitFor(() => {
@@ -187,9 +201,11 @@ describe('SearchResult component', (): void => {
   it('shows appropriate error for different HTTP status codes (4xx, 5xx)', async () => {
     mockedFetchData.mockRejectedValueOnce(new Error('API error: 404'));
     render(
-      <BrowserRouter>
-        <SearchResult searchText="" handleDetail={() => {}} />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <SearchResult searchText="" handleDetail={() => {}} />
+        </BrowserRouter>
+      </Provider>
     );
 
     await waitFor(() => {
