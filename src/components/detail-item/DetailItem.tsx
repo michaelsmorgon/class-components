@@ -18,15 +18,13 @@ export default function DetailItem(props: Props) {
 
   return (
     <div className={styles.wrapper} onClick={handlerItemClick}>
-      <div className={styles.item}>
-        <div className={styles.item_info}>
-          <img
-            src={imgPath || ''}
-            alt={props.item.name}
-            className={styles.item_img}
-          />
-          <DetailItemInfo item={props.item} />
-        </div>
+      <div className={styles.item_info}>
+        <img
+          src={imgPath || ''}
+          alt={props.item.name}
+          className={styles.item_img}
+        />
+        <DetailItemInfo item={props.item} />
       </div>
     </div>
   );

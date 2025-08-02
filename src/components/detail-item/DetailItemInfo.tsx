@@ -21,6 +21,17 @@ export default function DetailItemInfo(props: Props) {
 
   return (
     <div className={styles.info}>
+      {!props.showCloseBtn && (
+        <label
+          className={styles.checkbox_container}
+          onClick={(e) => {
+            e.stopPropagation();
+          }}
+        >
+          <input type="checkbox" className={styles.checkbox_input} />
+          <span className={styles.custom_checkbox}></span>
+        </label>
+      )}
       <div className={styles.header}>
         <h2 className={styles.title}>{props.item.name}</h2>
       </div>
