@@ -1,3 +1,9 @@
+.active {
+  color: var(--color-link-active);
+  text-decoration: underline;
+  font-weight: bold;
+}
+
 nav {
   background-color: var(--color-nav-bg);
   padding: 10px 20px;
