@@ -9,6 +9,12 @@ import DetailItem from '../detail-item/DetailItem';
 import { useParams, useSearchParams } from 'react-router-dom';
 import Pagination from '../pagination/Pagination';
 import { COUNT_PER_PAGE } from '../../utils/constants';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+  deleteItemAll,
+  selectSelectedItems,
+} from '../../redux/slices/ItemSlice';
+import Flyout from '../flyout/Flyout';
 
 type Props = {
   searchText: string;
@@ -24,6 +30,32 @@ export default function SearchResult(props: Props) {
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') || '1';
   const { handleDetail } = props;
+  const dispatch = useDispatch();
+  const selectedItems = useSelector(selectSelectedItems);
+
+  const handleUnselectAll = () => {
+    dispatch(deleteItemAll());
+  };
+
+  const handleDownload = () => {
+    const csvRows = [
+      ['Name', 'Height', 'Weight', 'Image URL'],
+      ...selectedItems.map((item: DataResult) => [
+        item.name,
+        item.height,
+        item.weight,
+        item.sprites.other.dream_world.front_default,
+      ]),
+    ];
+
+    const csvContent = csvRows.map((row) => row.join(',')).join('\n');
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${selectedItems.length}_items.csv`;
+    link.click();
+  };
 
   useEffect(() => {
     const runFetch = async (): Promise<void> => {
@@ -96,6 +128,13 @@ export default function SearchResult(props: Props) {
           </div>
         )}
       </div>
+      {selectedItems.length > 0 && (
+        <Flyout
+          selectCount={selectedItems.length}
+          onUnselectAll={handleUnselectAll}
+          onDownload={handleDownload}
+        />
+      )}
     </>
   );
 }

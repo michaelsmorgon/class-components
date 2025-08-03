@@ -2,6 +2,8 @@ import { render, screen } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import App from './App';
 import { describe, expect, test } from 'vitest';
+import { Provider } from 'react-redux';
+import store from '../../redux/Store';
 
 describe('App routing', () => {
   const PLACEHOLDER = 'Type text here...';
@@ -10,7 +12,9 @@ describe('App routing', () => {
   test('renders Main page at root path', () => {
     render(
       <MemoryRouter initialEntries={['/']}>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </MemoryRouter>
     );
     expect(screen.getByPlaceholderText(PLACEHOLDER)).toBeInTheDocument();
@@ -20,7 +24,9 @@ describe('App routing', () => {
   test('renders AboutPage at /about path', () => {
     render(
       <MemoryRouter initialEntries={['/about']}>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </MemoryRouter>
     );
     expect(screen.getByText(/Created by/i)).toBeInTheDocument();
@@ -29,7 +35,9 @@ describe('App routing', () => {
   test('renders Main for /details/:id route', () => {
     render(
       <MemoryRouter initialEntries={['/details/123']}>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </MemoryRouter>
     );
     // expect(screen.getByText(/main/i)).toBeInTheDocument();
@@ -40,7 +48,9 @@ describe('App routing', () => {
   test('renders Not Found for unknown route', () => {
     render(
       <MemoryRouter initialEntries={['/unknown']}>
-        <App />
+        <Provider store={store}>
+          <App />
+        </Provider>
       </MemoryRouter>
     );
     expect(screen.getByText(/Sorry, smth went wrong/i)).toBeInTheDocument();

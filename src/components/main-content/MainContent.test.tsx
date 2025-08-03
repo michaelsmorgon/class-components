@@ -4,6 +4,8 @@ import MainContent from './MainContent';
 import fetchData from '../search-result/ApiRequest';
 import { pikachuData } from '../../test-utils/constants';
 import { BrowserRouter } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import store from '../../redux/Store';
 
 vi.mock('../search-result/ApiRequest', () => ({
   default: vi.fn(),
@@ -19,9 +21,11 @@ describe('Main component', () => {
     (fetchData as ReturnType<typeof vi.fn>).mockResolvedValueOnce(pikachuData);
 
     render(
-      <BrowserRouter>
-        <MainContent />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <MainContent />
+        </BrowserRouter>
+      </Provider>
     );
 
     await waitFor(() => {
@@ -35,9 +39,11 @@ describe('Main component', () => {
     );
 
     render(
-      <BrowserRouter>
-        <MainContent />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <MainContent />
+        </BrowserRouter>
+      </Provider>
     );
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
   });

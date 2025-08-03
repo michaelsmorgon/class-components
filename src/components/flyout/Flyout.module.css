@@ -1,0 +1,58 @@
+.flyout {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--color-info-bg);
+  border-top: 1px solid var(--color-disabled);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: var(--color-text);
+  z-index: 100;
+}
+
+.selectedText {
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.buttonGroup {
+  display: flex;
+  gap: 1rem;
+}
+
+.button {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  color: var(--color-white);
+  transition: background-color 0.2s ease;
+}
+
+.buttonUnselect {
+  background-color: var(--color-btn-close-bg);
+}
+
+.buttonUnselect:hover {
+  background-color: var(--color-btn-close-hover);
+}
+
+.buttonUnselect:active {
+  background-color: var(--color-btn-close-active);
+}
+
+.buttonDownload {
+  background-color: var(--color-btn-bg);
+}
+
+.buttonDownload:hover {
+  background-color: var(--color-btn-bg-hover);
+}
+
+.buttonDownload:active {
+  background-color: var(--color-btn-bg-active);
+}
