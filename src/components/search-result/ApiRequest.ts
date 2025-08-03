@@ -26,7 +26,7 @@ type AdditionalResponse = {
 
 const fetchData = async (searchText: string): Promise<DataResult[]> => {
   if (searchText) {
-    const res = await fetch(API_URL + `/${searchText}`);
+    const res = await fetch(`${API_URL}/${searchText}`);
     checkRes(res);
     const data: AdditionalResponse = await res.json();
     return [{ ...data }];
@@ -41,17 +41,16 @@ const fetchData = async (searchText: string): Promise<DataResult[]> => {
       const result = await Promise.all(
         data.results.map(async (value) => {
           const response = await fetch(value.url);
-          return await response.json();
+          const data: AdditionalResponse = await response.json();
+          return {
+            name: data.name,
+            height: data.height,
+            weight: data.weight,
+          };
         })
-      )
-        .then((results) => {
-          const dataResult: DataResult[] = [];
-          results.map((value) => dataResult.push({ ...value }));
-          return dataResult;
-        })
-        .catch(() => {
-          return [];
-        });
+      ).catch(() => {
+        return [];
+      });
 
       return result;
     }

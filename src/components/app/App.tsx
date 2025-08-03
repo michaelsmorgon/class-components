@@ -1,5 +1,5 @@
 import styles from './App.module.css';
-import React, { type ReactNode } from 'react';
+import React from 'react';
 import SearchSection from '../search-section/SearchSection.tsx';
 import SearchResult from '../search-result/SearchResult.tsx';
 import ErrorBoundary from '../error-boundary/ErrorBoundary.tsx';
@@ -23,19 +23,17 @@ class App extends React.Component<Record<string, never>, AppState> {
     this.setState({ searchText });
   };
 
-  render(): ReactNode {
+  render() {
     return (
-      <>
-        <div className={styles.app_wrapper}>
-          <div className={styles.main}>
-            <ErrorBoundary>
-              <SearchSection onSearch={this.handleSearch} />
-              <SearchResult searchText={this.state.searchText} />
-              <ErrorButton />
-            </ErrorBoundary>
-          </div>
+      <div className={styles.app_wrapper}>
+        <div className={styles.main}>
+          <ErrorBoundary>
+            <SearchSection onSearch={this.handleSearch} />
+            <SearchResult searchText={this.state.searchText} />
+            <ErrorButton />
+          </ErrorBoundary>
         </div>
-      </>
+      </div>
     );
   }
 }

@@ -51,40 +51,55 @@ class SearchResult extends React.Component<Props, State> {
 
   render(): React.ReactNode {
     const { data, isLoading, error } = this.state;
-    return (
-      <>
+
+    if (isLoading) {
+      return (
         <div className={styles.search_result}>
-          {isLoading && <p>Loading...</p>}
-          {error && <p>Error Message: {error}</p>}
-          {!isLoading && !error && (
-            <div className={styles.row}>
-              <div className={styles.cell}>
-                <strong>Name</strong>
-              </div>
-              <div className={styles.cell}>
-                <strong>Description</strong>
-              </div>
-            </div>
-          )}
-          {!isLoading &&
-            !error &&
-            data.map((item, index) => {
-              return (
-                <div className={styles.row} key={index}>
-                  <div className={styles.cell}>{item.name}</div>
-                  <div className={styles.cell}>
-                    Height: {item.height}; Weight: {item.weight}
-                  </div>
-                </div>
-              );
-            })}
-          {!isLoading && !error && data.length === 0 && (
-            <div className={styles.row} key={0}>
-              No data...
-            </div>
-          )}
+          <p>Loading...</p>
         </div>
-      </>
+      );
+    }
+
+    if (error) {
+      return (
+        <div className={styles.search_result}>
+          <p>Error Message: {error}</p>
+        </div>
+      );
+    }
+
+    if (data.length === 0) {
+      return (
+        <div className={styles.search_result}>
+          <div className={styles.row} key={0}>
+            No data...
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className={styles.search_result}>
+        <div className={styles.row}>
+          <div className={styles.cell}>
+            <strong>Name</strong>
+          </div>
+          <div className={styles.cell}>
+            <strong>Description</strong>
+          </div>
+        </div>
+
+        {data.map((item, index) => {
+          return (
+            <div className={styles.row} key={index}>
+              <div className={styles.cell}>{item.name}</div>
+              <div className={styles.cell}>
+                Height: {item.height}; Weight: {item.weight}
+              </div>
+            </div>
+          );
+        })}
+      </div>
     );
   }
 }
