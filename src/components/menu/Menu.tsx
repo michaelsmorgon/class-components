@@ -17,10 +17,21 @@ export default function Menu() {
   return (
     <nav className={styles.nav}>
       <div className={styles.links}>
-        <NavLink to="." end className={styles.link}>
+        <NavLink
+          to="."
+          end
+          className={({ isActive }) =>
+            `${styles.link} ${isActive ? styles.active : ''}`
+          }
+        >
           Home
         </NavLink>
-        <NavLink to="about" className={styles.link}>
+        <NavLink
+          to="about"
+          className={({ isActive }) =>
+            `${styles.link} ${isActive ? styles.active : ''}`
+          }
+        >
           About
         </NavLink>
       </div>

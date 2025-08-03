@@ -32,6 +32,11 @@ nav a.active:hover {
   color: var(--color-link-hover);
 }
 
+.link.active {
+  color: var(--color-link-active);
+  pointer-events: none;
+}
+
 .themeToggleBtn {
   background-color: var(--color-btn-bg);
   color: var(--color-white);
