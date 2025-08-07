@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
-import type { DataResult } from '../../components/search-result/ApiRequest';
+import type { DataResult } from '../../utils/types';
 import type { RootState } from '../Store';
 
 interface ItemsState {
