@@ -1,5 +1,5 @@
 import styles from './DetailItem.module.css';
-import { type DataResult } from '../search-result/ApiRequest';
+import type { DataResult } from '../../utils/types';
 import DetailItemInfo from './DetailItemInfo';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';

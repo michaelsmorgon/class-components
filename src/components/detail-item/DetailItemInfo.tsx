@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import type { DataResult } from '../search-result/ApiRequest';
+import type { DataResult } from '../../utils/types';
 import styles from './DetailItem.module.css';
 
 type Props = {

@@ -1,10 +1,7 @@
 import { useEffect, useState } from 'react';
 import styles from './SearchResult.module.css';
-import fetchData, {
-  getDetailInfo,
-  type DataResult,
-  type Result,
-} from './ApiRequest';
+import fetchData, { getDetailInfo } from './ApiRequest';
+import type { DataResult, Result } from '../../utils/types';
 import DetailItem from '../detail-item/DetailItem';
 import { useParams, useSearchParams } from 'react-router-dom';
 import Pagination from '../pagination/Pagination';

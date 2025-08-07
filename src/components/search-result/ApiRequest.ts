@@ -1,49 +1,12 @@
 import { COUNT_PER_PAGE } from '../../utils/constants';
+import type {
+  DataResult,
+  Response,
+  Result,
+  AdditionalResponse,
+} from '../../utils/types';
 
 const API_URL = 'https://pokeapi.co/api/v2/pokemon';
-
-export type Result = {
-  count: number;
-  data: DataResult[];
-};
-
-export type DataResult = {
-  name: string;
-  height: number;
-  weight: number;
-  sprites: {
-    other: {
-      dream_world: {
-        front_default: string | null;
-      };
-    };
-  };
-};
-
-type Response = {
-  count: number;
-  next: string;
-  previous: string;
-  results: [
-    {
-      name: string;
-      url: string;
-    },
-  ];
-};
-
-type AdditionalResponse = {
-  name: string;
-  weight: number;
-  height: number;
-  sprites: {
-    other: {
-      dream_world: {
-        front_default: string | null;
-      };
-    };
-  };
-};
 
 const getDetailInfo = async (id: string) => {
   const res = await fetch(`${API_URL}/${id}`);

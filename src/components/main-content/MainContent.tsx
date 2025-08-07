@@ -5,8 +5,8 @@ import styles from './MainContent.module.css';
 import { LS_SEARCH_ROW } from '../../utils/constants';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useCallback, useState } from 'react';
-import { type DataResult } from '../search-result/ApiRequest';
 import DetailItemInfo from '../detail-item/DetailItemInfo';
+import type { DataResult } from '../../utils/types';
 
 export default function MainContent() {
   const [storedValue, setStoredValue] = useLocalStorage(LS_SEARCH_ROW, '');
