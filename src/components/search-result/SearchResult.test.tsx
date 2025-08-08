@@ -1,70 +1,37 @@
-import { describe, it, expect, type Mock, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor } from '@testing-library/react';
 import SearchResult from './SearchResult';
-import fetchData, { type Result } from './ApiRequest';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from '../../redux/Store';
+import { mockData } from '../../test-utils/constants';
 
-vi.mock('./ApiRequest', async () => ({
-  __esModule: true,
-  default: vi.fn(),
-}));
+vi.mock('../../services/api', async () => {
+  const actual = await vi.importActual('../../services/api');
+  return {
+    ...actual,
+    useGetItemsQuery: vi.fn(),
+    useGetItemDetailQuery: vi.fn(),
+  };
+});
 
-const mockedFetchData = fetchData as Mock;
+import * as api from '../../services/api';
+
+const mockUseGetItemsQuery = vi.mocked(api.useGetItemsQuery);
+const mockUseGetItemDetailQuery = vi.mocked(api.useGetItemDetailQuery);
 
 describe('SearchResult component', (): void => {
-  const mockData: Result = {
-    count: 3,
-    data: [
-      {
-        name: 'bulbasaur',
-        height: 7,
-        weight: 69,
-        sprites: {
-          other: {
-            dream_world: {
-              front_default:
-                'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg',
-            },
-          },
-        },
-      },
-      {
-        name: 'charmander',
-        height: 6,
-        weight: 85,
-        sprites: {
-          other: {
-            dream_world: {
-              front_default:
-                'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/4.svg',
-            },
-          },
-        },
-      },
-      {
-        name: 'pikachu',
-        height: 4,
-        weight: 99,
-        sprites: {
-          other: {
-            dream_world: {
-              front_default:
-                'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/25.svg',
-            },
-          },
-        },
-      },
-    ],
-  };
-
   beforeEach(() => {
-    mockedFetchData.mockReset();
+    vi.clearAllMocks();
+    mockUseGetItemDetailQuery.mockReturnValue({
+      data: undefined,
+      error: undefined,
+      isLoading: false,
+      refetch: vi.fn(),
+    });
   });
 
-  it('Renders correct number of items when data is provided', async () => {
-    mockedFetchData.mockResolvedValueOnce(mockData);
+  const renderComp = () =>
     render(
       <Provider store={store}>
         <BrowserRouter>
@@ -72,6 +39,16 @@ describe('SearchResult component', (): void => {
         </BrowserRouter>
       </Provider>
     );
+
+  it('Renders correct number of items when data is provided', async () => {
+    mockUseGetItemsQuery.mockReturnValue({
+      data: mockData,
+      error: undefined,
+      isLoading: false,
+      refetch: vi.fn(),
+    });
+
+    renderComp();
 
     await waitFor(() => {
       expect(screen.getByText('bulbasaur')).toBeInTheDocument();
@@ -84,14 +61,14 @@ describe('SearchResult component', (): void => {
   });
 
   it('displays "no results" message when data array is empty', async () => {
-    mockedFetchData.mockResolvedValueOnce({ count: 0, data: [] });
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <SearchResult searchText="" handleDetail={() => {}} />
-        </BrowserRouter>
-      </Provider>
-    );
+    mockUseGetItemsQuery.mockReturnValue({
+      data: { count: 0, data: [] },
+      error: undefined,
+      isLoading: false,
+      refetch: vi.fn(),
+    });
+
+    renderComp();
 
     await waitFor(() => {
       expect(screen.getByText(/no data/i)).toBeInTheDocument();
@@ -99,16 +76,31 @@ describe('SearchResult component', (): void => {
   });
 
   it('shows loading state while fetching data', async () => {
-    mockedFetchData.mockResolvedValueOnce(mockData);
-    render(
+    mockUseGetItemsQuery.mockReturnValue({
+      data: undefined,
+      error: undefined,
+      isLoading: true,
+      refetch: vi.fn(),
+    });
+
+    const { rerender } = renderComp();
+
+    expect(screen.getByText(/loading.../i)).toBeInTheDocument();
+
+    mockUseGetItemsQuery.mockReturnValue({
+      data: mockData,
+      error: undefined,
+      isLoading: false,
+      refetch: vi.fn(),
+    });
+
+    rerender(
       <Provider store={store}>
         <BrowserRouter>
           <SearchResult searchText="" handleDetail={() => {}} />
         </BrowserRouter>
       </Provider>
     );
-
-    expect(screen.getByText(/loading.../i)).toBeInTheDocument();
 
     await waitFor(() => {
       expect(screen.queryByText(/loading.../i)).not.toBeInTheDocument();
@@ -116,31 +108,30 @@ describe('SearchResult component', (): void => {
   });
 
   it('correctly displays item names and descriptions', async () => {
-    mockedFetchData.mockResolvedValueOnce({
-      count: 1,
-      data: [
-        {
-          name: 'bulbasaur',
-          height: 7,
-          weight: 69,
-          sprites: {
-            other: {
-              dream_world: {
-                front_default:
-                  'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg',
+    mockUseGetItemsQuery.mockReturnValue({
+      data: {
+        count: 1,
+        data: [
+          {
+            name: 'bulbasaur',
+            height: 7,
+            weight: 69,
+            sprites: {
+              other: {
+                dream_world: {
+                  front_default:
+                    'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/1.svg',
+                },
               },
             },
           },
-        },
-      ],
+        ],
+      },
+      error: undefined,
+      isLoading: false,
+      refetch: vi.fn(),
     });
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <SearchResult searchText="" handleDetail={() => {}} />
-        </BrowserRouter>
-      </Provider>
-    );
+    renderComp();
 
     expect(
       await screen.findByRole('heading', { level: 2, name: /bulbasaur/i })
@@ -150,30 +141,29 @@ describe('SearchResult component', (): void => {
   });
 
   it('handles missing or undefined data gracefully', async () => {
-    mockedFetchData.mockResolvedValueOnce({
-      count: 1,
-      data: [
-        {
-          name: '',
-          height: NaN,
-          weight: NaN,
-          sprites: {
-            other: {
-              dream_world: {
-                front_default: '',
+    mockUseGetItemsQuery.mockReturnValue({
+      data: {
+        count: 1,
+        data: [
+          {
+            name: '',
+            height: NaN,
+            weight: NaN,
+            sprites: {
+              other: {
+                dream_world: {
+                  front_default: '',
+                },
               },
             },
           },
-        },
-      ],
+        ],
+      },
+      error: undefined,
+      isLoading: false,
+      refetch: vi.fn(),
     });
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <SearchResult searchText="" handleDetail={() => {}} />
-        </BrowserRouter>
-      </Provider>
-    );
+    renderComp();
 
     await waitFor(() => {
       expect(screen.getByText(/height: NaN/i)).toBeInTheDocument();
@@ -182,36 +172,61 @@ describe('SearchResult component', (): void => {
   });
 
   it('displays error message when API call fails', async () => {
-    mockedFetchData.mockRejectedValueOnce(new Error('Test error'));
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <SearchResult searchText="" handleDetail={() => {}} />
-        </BrowserRouter>
-      </Provider>
-    );
+    mockUseGetItemsQuery.mockReturnValue({
+      data: undefined,
+      error: { status: 500, data: 'Test error' },
+      isLoading: false,
+      refetch: vi.fn(),
+    });
+    renderComp();
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/Error Message: test error/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/Test error/i)).toBeInTheDocument();
     });
   });
 
   it('shows appropriate error for different HTTP status codes (4xx, 5xx)', async () => {
-    mockedFetchData.mockRejectedValueOnce(new Error('API error: 404'));
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <SearchResult searchText="" handleDetail={() => {}} />
-        </BrowserRouter>
-      </Provider>
-    );
+    mockUseGetItemsQuery.mockReturnValue({
+      data: undefined,
+      error: { status: 404, data: 'API error: 404' },
+      isLoading: false,
+      refetch: vi.fn(),
+    });
+    renderComp();
 
     await waitFor(() => {
-      expect(
-        screen.getByText(/Error Message: api error: 404/i)
-      ).toBeInTheDocument();
+      expect(screen.getByText(/api error: 404/i)).toBeInTheDocument();
     });
+  });
+
+  // it('handleRefetch calls refetch', async () => {
+  //   const refetchMock = vi.fn();
+  //   mockUseGetItemsQuery.mockReturnValue({
+  //     data: mockData,
+  //     error: undefined,
+  //     isLoading: false,
+  //     refetch: refetchMock,
+  //   });
+
+  //   renderComp();
+
+  //   const btn = screen.getByRole('button', { name: '🔄 Refresh' });
+  //   fireEvent.click(btn);
+  //   expect(refetchMock).toHaveBeenCalled();
+  // });
+
+  it('renders Flyout if selectedItems exists', () => {
+    store.dispatch({ type: 'items/addItem', payload: mockData.data[0] });
+
+    mockUseGetItemsQuery.mockReturnValue({
+      data: mockData,
+      error: undefined,
+      isLoading: false,
+      refetch: vi.fn(),
+    });
+
+    renderComp();
+
+    expect(screen.getByText(/download/i)).toBeInTheDocument();
   });
 });

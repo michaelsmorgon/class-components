@@ -52,3 +52,31 @@
   background-color: var(--color-btn-bg-active);
   transform: scale(0.98);
 }
+
+.refresh_btn {
+  font-family: Roboto;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: var(--color-white);
+  border: none;
+  background-color: var(--color-btn-bg);
+  border-radius: 5px;
+  box-shadow: 2px 0px 4px 0px var(--color-btn-bg);
+  width: 150px; /* можа быць трохі ўжо за кошт лаканічнасці */
+  height: 37px;
+  margin-left: 10px;
+}
+
+.refresh_btn:hover {
+  cursor: pointer;
+  box-shadow: none;
+  background-color: var(--color-btn-bg-hover);
+}
+
+.refresh_btn:active {
+  background-color: var(--color-btn-bg-active);
+  transform: scale(0.98);
+}

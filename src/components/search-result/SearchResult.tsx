@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import styles from './SearchResult.module.css';
-import fetchData, { getDetailInfo } from './ApiRequest';
-import type { DataResult, Result } from '../../utils/types';
+import type { DataResult } from '../../utils/types';
 import DetailItem from '../detail-item/DetailItem';
 import { useParams, useSearchParams } from 'react-router-dom';
 import Pagination from '../pagination/Pagination';
@@ -12,6 +11,8 @@ import {
   selectSelectedItems,
 } from '../../redux/slices/ItemSlice';
 import Flyout from '../flyout/Flyout';
+import { useGetItemDetailQuery, useGetItemsQuery } from '../../services/api';
+import { getErrorMessage } from '../../utils/apiErrorHandler';
 
 type Props = {
   searchText: string;
@@ -19,16 +20,25 @@ type Props = {
 };
 
 export default function SearchResult(props: Props) {
-  const [data, setData] = useState<Result>({ count: 0, data: [] });
-  const [isLoading, setIsLoading] = useState(false);
-  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const { id } = useParams<{ id: string }>();
+  const { id = '' } = useParams<{ id?: string }>();
   const [searchParams] = useSearchParams();
   const page = searchParams.get('page') || '1';
   const { handleDetail } = props;
   const dispatch = useDispatch();
   const selectedItems = useSelector(selectSelectedItems);
+
+  const { data, error, isLoading } = useGetItemsQuery({
+    page: parseInt(page),
+    searchText: props.searchText,
+  });
+
+  const {
+    data: detailData,
+    error: errorDetail,
+    isLoading: isLoadingDetail,
+  } = useGetItemDetailQuery(id, {
+    skip: !id,
+  });
 
   const handleUnselectAll = () => {
     dispatch(deleteItemAll());
@@ -55,75 +65,47 @@ export default function SearchResult(props: Props) {
   };
 
   useEffect(() => {
-    const runFetch = async (): Promise<void> => {
-      try {
-        setError(null);
-        setIsLoading(true);
-        const result: Result = await fetchData(
-          props.searchText,
-          parseInt(page)
-        );
-        setData(result);
-        setIsLoading(false);
-      } catch (err) {
-        if (err instanceof Error) {
-          setIsLoading(false);
-          setError(err.message);
-          console.log('>>> Error: ', err);
-        } else {
-          setIsLoading(false);
-          setError('Unexpected error');
-          console.log('>>> Unknown error: ', err);
-        }
-      }
-    };
-    runFetch();
-  }, [props.searchText, page]);
+    if (id && detailData) {
+      handleDetail(detailData);
+    } else {
+      handleDetail(null);
+    }
+  }, [id, detailData, handleDetail]);
 
-  useEffect(() => {
-    const runFetch = async (): Promise<void> => {
-      try {
-        if (id) {
-          handleDetail(null);
-          setIsLoadingDetail(true);
-          const result: DataResult = await getDetailInfo(id);
-          handleDetail(result);
-          setIsLoadingDetail(false);
-        }
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-          console.log('>>> Error: ', err);
-        } else {
-          setError('Unexpected error');
-          console.log('>>> Unknown error: ', err);
-        }
-      }
-    };
-    runFetch();
-  }, [handleDetail, id]);
+  if (isLoading || isLoadingDetail) {
+    return (
+      <div className={styles.search_result}>
+        <div className={styles.loading}>
+          <p>Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || errorDetail) {
+    return (
+      <div className={styles.search_result}>
+        <p>Error Message: {getErrorMessage(error || errorDetail)}</p>
+      </div>
+    );
+  }
+
+  if (data && data.count === 0) {
+    return (
+      <div className={styles.search_result}>
+        <div className={styles.row}>No data...</div>
+      </div>
+    );
+  }
 
   return (
     <>
       <div className={styles.search_result}>
-        <div className={styles.loading}>
-          {isLoading && <p>Loading...</p>}
-          {isLoadingDetail && <p>Loading...</p>}
-        </div>
-        {error && <p>Error Message: {error}</p>}
-        {!isLoading &&
-          !error &&
+        {data &&
           data.data.map((item, index) => {
             return <DetailItem item={item} key={index} />;
           })}
-        {!isLoading && !error && data.count >= COUNT_PER_PAGE && (
-          <Pagination page={page} />
-        )}
-        {!isLoading && !error && data.count === 0 && (
-          <div className={styles.row} key={0}>
-            No data...
-          </div>
-        )}
+        {data && data.count >= COUNT_PER_PAGE && <Pagination page={page} />}
       </div>
       {selectedItems.length > 0 && (
         <Flyout

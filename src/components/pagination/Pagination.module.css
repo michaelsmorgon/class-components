@@ -35,7 +35,7 @@
 .paginator_btn:hover:not(:disabled) {
   cursor: pointer;
   box-shadow: none;
-  background-color: var(--color-btn-bg-hover)
+  background-color: var(--color-btn-bg-hover);
 }
 
 .paginator_btn:disabled {

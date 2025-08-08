@@ -1,15 +1,12 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import MainContent from './MainContent';
-import fetchData from '../search-result/ApiRequest';
-import { pikachuData } from '../../test-utils/constants';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from '../../redux/Store';
+import * as api from '../../services/api';
 
-vi.mock('../search-result/ApiRequest', () => ({
-  default: vi.fn(),
-}));
+const mockUseGetItemsQuery = vi.spyOn(api, 'useGetItemsQuery');
 
 describe('Main component', () => {
   beforeEach(() => {
@@ -17,9 +14,7 @@ describe('Main component', () => {
     vi.clearAllMocks();
   });
 
-  it('makes initial API call on mount', async () => {
-    (fetchData as ReturnType<typeof vi.fn>).mockResolvedValueOnce(pikachuData);
-
+  const renderComp = () =>
     render(
       <Provider store={store}>
         <BrowserRouter>
@@ -28,23 +23,31 @@ describe('Main component', () => {
       </Provider>
     );
 
-    await waitFor(() => {
-      expect(fetchData).toHaveBeenCalled();
+  it('makes initial API call on mount', async () => {
+    mockUseGetItemsQuery.mockReturnValue({
+      data: undefined,
+      error: undefined,
+      isLoading: true,
+      refetch: vi.fn(),
+    });
+
+    renderComp();
+
+    expect(mockUseGetItemsQuery).toHaveBeenCalledWith({
+      page: 1,
+      searchText: '',
     });
   });
 
   it('shows loading state during API call', async () => {
-    (fetchData as ReturnType<typeof vi.fn>).mockImplementation(
-      () => new Promise(() => {})
-    );
+    mockUseGetItemsQuery.mockReturnValue({
+      data: undefined,
+      error: undefined,
+      isLoading: true,
+      refetch: vi.fn(),
+    });
 
-    render(
-      <Provider store={store}>
-        <BrowserRouter>
-          <MainContent />
-        </BrowserRouter>
-      </Provider>
-    );
+    renderComp();
     expect(screen.getByText(/loading/i)).toBeInTheDocument();
   });
 });
