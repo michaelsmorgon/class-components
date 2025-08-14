@@ -27,7 +27,7 @@ export default function SearchResult(props: Props) {
   const dispatch = useDispatch();
   const selectedItems = useSelector(selectSelectedItems);
 
-  const { data, error, isLoading } = useGetItemsQuery({
+  const { data, error, isLoading, isFetching } = useGetItemsQuery({
     page: parseInt(page),
     searchText: props.searchText,
   });
@@ -36,9 +36,13 @@ export default function SearchResult(props: Props) {
     data: detailData,
     error: errorDetail,
     isLoading: isLoadingDetail,
+    isFetching: isFetchingDetail,
   } = useGetItemDetailQuery(id, {
     skip: !id,
   });
+
+  const isAnyLoading =
+    isLoading || isFetching || isLoadingDetail || isFetchingDetail;
 
   const handleUnselectAll = () => {
     dispatch(deleteItemAll());
@@ -72,7 +76,7 @@ export default function SearchResult(props: Props) {
     }
   }, [id, detailData, handleDetail]);
 
-  if (isLoading || isLoadingDetail) {
+  if (isAnyLoading) {
     return (
       <div className={styles.search_result}>
         <div className={styles.loading}>
