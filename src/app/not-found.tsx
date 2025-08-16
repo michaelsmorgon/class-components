@@ -1,14 +1,5 @@
-import Image from 'next/image';
-import styles from './not-found.module.css';
-import notFoundIcon from '@/assets/not-found.svg';
+import NotFoundPage from '@/app/components/not-found/NotFound';
 
 export default function NotFound() {
-  return (
-    <div className={styles.not_found}>
-      <div className={styles.wrapper}>
-        <Image src={notFoundIcon} alt="Not found" width={200} height={200} />
-        <p className={styles.message}>Sorry, smth went wrong((</p>
-      </div>
-    </div>
-  );
+  return <NotFoundPage />;
 }

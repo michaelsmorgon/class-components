@@ -1,11 +1,12 @@
+import Image from 'next/image';
 import styles from './NotFound.module.css';
-import notFoundImage from '../../assets/not-found.svg';
+import notFoundIcon from '@/assets/not-found.svg';
 
-export default function NotFound() {
+export default function NotFoundPage() {
   return (
     <div className={styles.not_found}>
       <div className={styles.wrapper}>
-        <img src={notFoundImage} alt="Page not found" />
+        <Image src={notFoundIcon} alt="Not found" width={200} height={200} />
         <p className={styles.message}>Sorry, smth went wrong((</p>
       </div>
     </div>
