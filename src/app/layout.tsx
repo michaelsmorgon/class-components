@@ -1,7 +1,7 @@
 import './global.css';
-import Menu from '@/app/components/menu/Menu';
+import Menu from '@/components/menu/Menu';
 import ReduxProvider from '@/app/providers/ReduxProviders';
-import { ThemeProvider } from '@/app/components/theme-provider/ThemeProvider';
+import { ThemeProvider } from '@/components/theme-provider/ThemeProvider';
 
 export default function LocaleLayout({
   children,

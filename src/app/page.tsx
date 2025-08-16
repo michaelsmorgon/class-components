@@ -1,4 +1,4 @@
-import MainContent from '@/app/components/main-content/MainContent';
+import MainContent from '@/components/main-content/MainContent';
 
 export default function Page() {
   return <MainContent />;
