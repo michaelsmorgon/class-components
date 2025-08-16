@@ -1,6 +1,7 @@
 import './global.css';
 import Menu from '@/app/components/menu/Menu';
-import Providers from '@/app/providers/Providers';
+import ReduxProvider from '@/app/providers/ReduxProviders';
+import { ThemeProvider } from '@/app/components/theme-provider/ThemeProvider';
 
 export default function LocaleLayout({
   children,
@@ -11,10 +12,12 @@ export default function LocaleLayout({
     <html lang="en">
       <body>
         <div className="app_wrapper">
-          <Providers>
-            <Menu />
-            {children}
-          </Providers>
+          <ReduxProvider>
+            <ThemeProvider>
+              <Menu />
+              {children}
+            </ThemeProvider>
+          </ReduxProvider>
         </div>
       </body>
     </html>
