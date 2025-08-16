@@ -1,3 +1,4 @@
+'use client';
 import styles from './Flyout.module.css';
 
 type Props = {

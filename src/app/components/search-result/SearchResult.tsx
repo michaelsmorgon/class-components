@@ -1,8 +1,8 @@
+'use client';
 import { useEffect } from 'react';
 import styles from './SearchResult.module.css';
 import type { DataResult } from '../../utils/types';
 import DetailItem from '../detail-item/DetailItem';
-import { useParams, useSearchParams } from 'react-router-dom';
 import Pagination from '../pagination/Pagination';
 import { COUNT_PER_PAGE } from '../../utils/constants';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +13,7 @@ import {
 import Flyout from '../flyout/Flyout';
 import { useGetItemDetailQuery, useGetItemsQuery } from '../../services/api';
 import { getErrorMessage } from '../../utils/apiErrorHandler';
+import { useParams, useSearchParams } from 'next/navigation';
 
 type Props = {
   searchText: string;
@@ -21,7 +22,7 @@ type Props = {
 
 export default function SearchResult(props: Props) {
   const { id = '' } = useParams<{ id?: string }>();
-  const [searchParams] = useSearchParams();
+  const searchParams = useSearchParams();
   const page = searchParams.get('page') || '1';
   const { handleDetail } = props;
   const dispatch = useDispatch();

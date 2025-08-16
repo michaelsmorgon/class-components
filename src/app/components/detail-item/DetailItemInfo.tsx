@@ -1,6 +1,7 @@
-import { useLocation, useNavigate } from 'react-router-dom';
-import type { DataResult } from '../../utils/types';
+'use client';
+import type { DataResult } from '@/app/utils/types';
 import styles from './DetailItem.module.css';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 type Props = {
   item: DataResult;
@@ -9,14 +10,15 @@ type Props = {
 };
 
 export default function DetailItemInfo(props: Props) {
-  const navigate = useNavigate();
-  const location = useLocation();
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const page = searchParams.get('page');
 
   const handleClose = () => {
     if (props.handleDetail) {
       props.handleDetail(null);
     }
-    navigate('/' + location.search);
+    router.replace(`/?page=${page}`);
   };
 
   return (

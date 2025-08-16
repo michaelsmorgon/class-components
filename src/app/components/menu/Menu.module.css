@@ -4,24 +4,6 @@
   font-weight: bold;
 }
 
-nav {
-  background-color: var(--color-nav-bg);
-  padding: 10px 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-nav a {
-  margin: 15px;
-}
-
-nav a.active:hover {
-  color: var(--color-white);
-  text-decoration: none;
-  cursor: default;
-}
-
 .links {
   display: flex;
   gap: 15px;

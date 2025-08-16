@@ -1,3 +1,4 @@
+'use client';
 import ErrorBoundary from '../error-boundary/ErrorBoundary';
 import SearchResult from '../search-result/SearchResult';
 import SearchSection from '../search-section/SearchSection';

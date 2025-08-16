@@ -1,7 +1,8 @@
+'use client';
 import React, { useState } from 'react';
 import styles from './SearchSection.module.css';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useGetItemsQuery } from '../../services/api';
 
 const LS_SEARCH_ROW = 'searchRow';
@@ -14,8 +15,8 @@ export default function SearchSection(props: Props) {
   const PLACEHOLDER: string = 'Type text here...';
   const [storedValue, setStoredValue] = useLocalStorage(LS_SEARCH_ROW, '');
   const [searchRow, setSearchRow] = useState(storedValue || '');
-  const navigation = useNavigate();
-  const [searchParams] = useSearchParams();
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const page = searchParams.get('page') || '1';
 
   const { refetch } = useGetItemsQuery({
@@ -32,9 +33,9 @@ export default function SearchSection(props: Props) {
     setStoredValue(searchText);
     props.onSearch(searchText);
     if (searchText) {
-      navigation(`/?search=${searchText}`);
+      router.push(`/?search=${searchText}`);
     } else {
-      navigation('/');
+      router.push(`/`);
     }
   };
 

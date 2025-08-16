@@ -1,5 +1,6 @@
-import { useNavigate } from 'react-router-dom';
+'use client';
 import styles from './Pagination.module.css';
+import { useRouter } from 'next/navigation';
 
 type Props = {
   page: string;
@@ -7,10 +8,10 @@ type Props = {
 
 export default function Pagination({ page }: Props) {
   const currentPage = parseInt(page);
-  const navigate = useNavigate();
+  const router = useRouter();
 
   const changePage = (newPage: number) => {
-    navigate(`/?page=${newPage.toString()}`);
+    router.push(`/?page=${newPage.toString()}`);
   };
 
   return (
