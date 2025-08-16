@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { API_URL, COUNT_PER_PAGE } from '../utils/constants';
-import type { DataResult, Response, Result } from '../utils/types';
+import { API_URL, COUNT_PER_PAGE } from '@/app/utils/constants';
+import type { DataResult, Response, Result } from '@/app/utils/types';
 
 export const api = createApi({
   reducerPath: 'pokemonApi',
