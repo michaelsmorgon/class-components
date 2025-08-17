@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import styles from './SearchResult.module.css';
-import type { DataResult } from '../../utils/types';
+import type { DataResult, Result } from '../../utils/types';
 import DetailItem from '../detail-item/DetailItem';
 import Pagination from '../pagination/Pagination';
 import { COUNT_PER_PAGE } from '../../utils/constants';
@@ -19,6 +19,7 @@ import { useTranslations } from 'next-intl';
 type Props = {
   searchText: string;
   handleDetail: (data: DataResult | null) => void;
+  initialData?: Result;
 };
 
 export default function SearchResult(props: Props) {
@@ -30,10 +31,13 @@ export default function SearchResult(props: Props) {
   const selectedItems = useSelector(selectSelectedItems);
   const i18n = useTranslations('result');
 
-  const { data, error, isLoading, isFetching } = useGetItemsQuery({
-    page: parseInt(page),
-    searchText: props.searchText,
-  });
+  const { data, error, isLoading, isFetching } = useGetItemsQuery(
+    {
+      page: parseInt(page),
+      searchText: props.searchText,
+    },
+    { skip: !!props.initialData }
+  );
 
   const {
     data: detailData,
@@ -64,7 +68,7 @@ export default function SearchResult(props: Props) {
     }
   }, [id, detailData, handleDetail]);
 
-  if (isAnyLoading) {
+  if (isAnyLoading && !props.initialData) {
     return (
       <div className={styles.search_result}>
         <div className={styles.loading}>
@@ -74,7 +78,7 @@ export default function SearchResult(props: Props) {
     );
   }
 
-  if (error || errorDetail) {
+  if ((error || errorDetail) && !props.initialData) {
     return (
       <div className={styles.search_result}>
         <p>
@@ -84,7 +88,9 @@ export default function SearchResult(props: Props) {
     );
   }
 
-  if (data && data.count === 0) {
+  const finalData = data || props.initialData;
+
+  if (finalData && finalData.count === 0) {
     return (
       <div className={styles.search_result}>
         <div className={styles.row}>{i18n('noData')}</div>
@@ -95,11 +101,13 @@ export default function SearchResult(props: Props) {
   return (
     <>
       <div className={styles.search_result}>
-        {data &&
-          data.data.map((item, index) => {
+        {finalData &&
+          finalData.data.map((item, index) => {
             return <DetailItem item={item} key={index} />;
           })}
-        {data && data.count >= COUNT_PER_PAGE && <Pagination page={page} />}
+        {finalData && finalData.count >= COUNT_PER_PAGE && (
+          <Pagination page={page} />
+        )}
       </div>
       {selectedItems.length > 0 && (
         <Flyout
