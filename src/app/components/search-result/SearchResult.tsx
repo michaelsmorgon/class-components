@@ -1,4 +1,3 @@
-'use client';
 import { useEffect } from 'react';
 import styles from './SearchResult.module.css';
 import type { DataResult } from '../../utils/types';
@@ -14,7 +13,8 @@ import Flyout from '../flyout/Flyout';
 import { useGetItemDetailQuery, useGetItemsQuery } from '../../services/api';
 import { getErrorMessage } from '../../utils/apiErrorHandler';
 import { useParams, useSearchParams } from 'next/navigation';
-import { exportCsv } from '@/app/actions/exportCSV';
+import { exportCsv } from '@/app/actions/exportCsv';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   searchText: string;
@@ -28,6 +28,7 @@ export default function SearchResult(props: Props) {
   const { handleDetail } = props;
   const dispatch = useDispatch();
   const selectedItems = useSelector(selectSelectedItems);
+  const i18n = useTranslations('result');
 
   const { data, error, isLoading, isFetching } = useGetItemsQuery({
     page: parseInt(page),
@@ -67,7 +68,7 @@ export default function SearchResult(props: Props) {
     return (
       <div className={styles.search_result}>
         <div className={styles.loading}>
-          <p>Loading...</p>
+          <p>{i18n('loading')}</p>
         </div>
       </div>
     );
@@ -76,7 +77,9 @@ export default function SearchResult(props: Props) {
   if (error || errorDetail) {
     return (
       <div className={styles.search_result}>
-        <p>Error Message: {getErrorMessage(error || errorDetail)}</p>
+        <p>
+          {i18n('errorMessage')}: {getErrorMessage(error || errorDetail)}
+        </p>
       </div>
     );
   }
@@ -84,7 +87,7 @@ export default function SearchResult(props: Props) {
   if (data && data.count === 0) {
     return (
       <div className={styles.search_result}>
-        <div className={styles.row}>No data...</div>
+        <div className={styles.row}>{i18n('noData')}</div>
       </div>
     );
   }

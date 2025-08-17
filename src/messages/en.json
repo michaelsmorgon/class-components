@@ -1,0 +1,34 @@
+{
+  "menu": {
+    "home": "Home",
+    "about": "About"
+  },
+  "about": {
+    "title": "About",
+    "createdBy": "Created by",
+    "course": "RS School React course"
+  },
+  "search" : {
+    "search": "Search",
+    "refresh": "Refresh",
+    "placeholder": "Type text here"
+  },
+  "result": {
+    "noData": "No data...",
+    "loading": "Loading...",
+    "errorMessage": "Error Message"
+  },
+  "flyout": {
+    "unselectAll": "Unselect All",
+    "download": "Download",
+    "itemsAre": "items are",
+    "itemsIs": "item is",
+    "selected": "selected"
+  },
+  "detail": {
+    "close": "Close",
+    "desc": "Description",
+    "height": "Height",
+    "weight": "Weight"
+  }
+}

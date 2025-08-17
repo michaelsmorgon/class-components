@@ -4,6 +4,7 @@ import styles from './SearchSection.module.css';
 import { useLocalStorage } from '../../hooks/useLocalStorage';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useGetItemsQuery } from '../../services/api';
+import { useTranslations } from 'next-intl';
 
 const LS_SEARCH_ROW = 'searchRow';
 
@@ -12,12 +13,12 @@ type Props = {
 };
 
 export default function SearchSection(props: Props) {
-  const PLACEHOLDER: string = 'Type text here...';
   const [storedValue, setStoredValue] = useLocalStorage(LS_SEARCH_ROW, '');
   const [searchRow, setSearchRow] = useState(storedValue || '');
   const router = useRouter();
   const searchParams = useSearchParams();
   const page = searchParams.get('page') || '1';
+  const i18n = useTranslations('search');
 
   const { refetch } = useGetItemsQuery({
     page: parseInt(page),
@@ -48,15 +49,15 @@ export default function SearchSection(props: Props) {
       <input
         className={styles.input}
         type="text"
-        placeholder={PLACEHOLDER}
+        placeholder={i18n('placeholder')}
         value={searchRow}
         onChange={handleInputChange}
       />
       <button className={styles.search_btn} onClick={handleSearchClick}>
-        Search
+        {i18n('search')}
       </button>
       <button className={styles.refresh_btn} onClick={handleRefetch}>
-        🔄 Refresh
+        🔄 {i18n('refresh')}
       </button>
     </div>
   );

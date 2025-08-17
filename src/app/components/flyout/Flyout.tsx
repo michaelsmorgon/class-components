@@ -1,5 +1,5 @@
-'use client';
 import styles from './Flyout.module.css';
+import { useTranslations } from 'next-intl';
 
 type Props = {
   selectCount: number;
@@ -12,24 +12,24 @@ export default function Flyout({
   onUnselectAll,
   onDownload,
 }: Props) {
+  const i18n = useTranslations('flyout');
+  const selectedText = `${selectCount} ${selectCount === 1 ? i18n('itemsIs') : i18n('itemsAre')} ${i18n('selected')}`;
   return (
     <div className={styles.flyout}>
       <div className={styles.flyoutInner}>
-        <div className={styles.selectedText}>
-          {selectCount} {selectCount === 1 ? 'item is' : 'items are'} selected
-        </div>
+        <div className={styles.selectedText}>{selectedText}</div>
         <div className={styles.buttonGroup}>
           <button
             className={`${styles.button} ${styles.buttonUnselect}`}
             onClick={onUnselectAll}
           >
-            Unselect All
+            {i18n('unselectAll')}
           </button>
           <button
             className={`${styles.button} ${styles.buttonDownload}`}
             onClick={onDownload}
           >
-            Download
+            {i18n('download')}
           </button>
         </div>
       </div>
