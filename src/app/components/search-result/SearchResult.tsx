@@ -14,6 +14,7 @@ import Flyout from '../flyout/Flyout';
 import { useGetItemDetailQuery, useGetItemsQuery } from '../../services/api';
 import { getErrorMessage } from '../../utils/apiErrorHandler';
 import { useParams, useSearchParams } from 'next/navigation';
+import { exportCsv } from '@/app/actions/exportCSV';
 
 type Props = {
   searchText: string;
@@ -49,24 +50,9 @@ export default function SearchResult(props: Props) {
     dispatch(deleteItemAll());
   };
 
-  const handleDownload = () => {
-    const csvRows = [
-      ['Name', 'Height', 'Weight', 'Image URL'],
-      ...selectedItems.map((item: DataResult) => [
-        item.name,
-        item.height,
-        item.weight,
-        item.sprites.other.dream_world.front_default,
-      ]),
-    ];
-
-    const csvContent = csvRows.map((row) => row.join(',')).join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `${selectedItems.length}_items.csv`;
-    link.click();
+  const handleDownload = async () => {
+    const url = await exportCsv(selectedItems);
+    window.location.href = url;
   };
 
   useEffect(() => {
