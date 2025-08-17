@@ -36,7 +36,9 @@ export default function SearchResult(props: Props) {
       page: parseInt(page),
       searchText: props.searchText,
     },
-    { skip: !!props.initialData }
+    {
+      skip: props.initialData !== undefined && !page && !props.searchText,
+    }
   );
 
   const {
