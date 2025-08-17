@@ -9,11 +9,13 @@ import {
 
 async function getInitialData(search: string | undefined): Promise<Result> {
   if (search) {
-    const res = await fetch(`${API_URL}/${search}`);
+    const res = await fetch(`${API_URL}/${search}`, { cache: 'force-cache' });
     const data: AdditionalResponse = await res.json();
     return { count: 1, data: [data] };
   } else {
-    const res = await fetch(`${API_URL}?limit=${COUNT_PER_PAGE}`);
+    const res = await fetch(`${API_URL}?limit=${COUNT_PER_PAGE}`, {
+      cache: 'force-cache',
+    });
     const data: Response = await res.json();
 
     if (Object.keys(data).length === 0) {
@@ -44,7 +46,9 @@ export default async function Page({
 }: {
   searchParams: { search?: string };
 }) {
-  const initialData = await getInitialData(searchParams.search);
+  const sp = await searchParams;
+  const search = sp.search;
+  const initialData = await getInitialData(search);
 
   return <MainContent initialData={initialData} />;
 }
