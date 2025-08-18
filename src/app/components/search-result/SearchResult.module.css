@@ -1,0 +1,25 @@
+.search_result {
+  padding: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.loading {
+  text-align: center;
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  width: 100%;
+}
+.cell {
+  width: 40%;
+  padding: 4px;
+  border: 1px solid #ccc;
+}
+
+.cell:last-of-type {
+  width: 60%;
+}

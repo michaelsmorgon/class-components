@@ -1,0 +1,34 @@
+{
+  "menu": {
+    "home": "Галоўная",
+    "about": "Пра нас"
+  },
+  "about": {
+    "title": "Пра нас",
+    "createdBy": "Створана",
+    "course": "Курс RS School React"
+  },
+  "search" : {
+    "search": "Пошук",
+    "refresh": "Абнавіць",
+    "placeholder": "Напішыце тэкст тут"
+  },
+  "result": {
+    "noData": "Няма дадзеных...",
+    "loading": "Загрузка...",
+    "errorMessage": "Памылка"
+  },
+  "flyout": {
+    "unselectAll": "Скасаваць усе",
+    "download": "Спампаваць",
+    "itemsAre": "элементы/-аў",
+    "itemsIs": "элемент",
+    "selected": "выбраны"
+  },
+  "detail": {
+    "close": "Закрыць",
+    "desc": "Апісанне",
+    "height": "Вышыня",
+    "weight": "Вага"
+  }
+}

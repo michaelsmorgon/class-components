@@ -1,0 +1,95 @@
+:root {
+  --color-text: #2d2d2d;
+  --color-bg: #f4f4f4;
+  --color-link: #3498db;
+  --color-link-hover: #1abc9c;
+  --color-link-active: #e2dfdf;
+  --color-nav-bg: #2c3e50;
+  --color-info-bg: #e5e5e5;
+  --color-description: #828282;
+  --color-btn-bg: #2f80ed;
+  --color-btn-bg-hover: #5ea2ff;
+  --color-btn-bg-active: #2980b9;
+  --color-btn-close-bg: #d40c0c;
+  --color-btn-close-hover: #ff5f5f;
+  --color-btn-close-active: #832020;
+  --color-disabled: #b1b1b1;
+  --color-white: #ffffff;
+}
+
+.dark-theme {
+  --color-text: #e0e0e0;
+  --color-bg: #121212;
+  --color-link: #4aa3ff;
+  --color-link-hover: #00d1b2;
+  --color-nav-bg: #1e2a35;
+  --color-info-bg: #1f1f1f;
+  --color-description: #aaaaaa;
+  --color-btn-bg: #3b82f6;
+  --color-btn-bg-hover: #60a5fa;
+  --color-btn-bg-active: #2563eb;
+  --color-btn-close-bg: #ff4d4d;
+  --color-btn-close-hover: #ff7b7b;
+  --color-btn-close-active: #8b0000;
+  --color-disabled: #555;
+  --color-white: #ffffff;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, 'Helvetica Neue', sans-serif;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+}
+
+#root {
+  display: block;
+  width: 100%;
+}
+
+.active {
+  color: var(--color-white);
+  text-decoration: none;
+  cursor: default;
+}
+
+a {
+  color: var(--color-link);
+  font-size: 25px;
+}
+
+a:hover {
+  color: var(--color-link-hover);
+}
+
+nav {
+  background-color: var(--color-nav-bg);
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+nav a {
+  margin: 15px;
+}
+
+nav a.active:hover {
+  color: var(--color-white);
+  text-decoration: none;
+  cursor: default;
+}
+
+.app_wrapper {
+  display: block;
+  max-width: 1440px;
+  margin: 0 auto;
+  height: 100%;
+}
