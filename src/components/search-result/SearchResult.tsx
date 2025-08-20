@@ -71,9 +71,7 @@ class SearchResult extends React.Component<Props, State> {
     if (data.length === 0) {
       return (
         <div className={styles.search_result}>
-          <div className={styles.row} key={0}>
-            No data...
-          </div>
+          <div className={styles.row}>No data...</div>
         </div>
       );
     }
