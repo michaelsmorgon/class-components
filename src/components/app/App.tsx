@@ -1,0 +1,41 @@
+import styles from './App.module.css';
+import React from 'react';
+import SearchSection from '../search-section/SearchSection.tsx';
+import SearchResult from '../search-result/SearchResult.tsx';
+import ErrorBoundary from '../error-boundary/ErrorBoundary.tsx';
+import ErrorButton from '../error-button/ErrorButton.tsx';
+import { LS_SEARCH_ROW } from '../../utils/constants.ts';
+
+type AppState = {
+  searchText: string;
+};
+
+class App extends React.Component<Record<string, never>, AppState> {
+  constructor(props: Record<string, never>) {
+    super(props);
+    const searchText = localStorage.getItem(LS_SEARCH_ROW) || '';
+    this.state = {
+      searchText,
+    };
+  }
+
+  handleSearch = (searchText: string): void => {
+    this.setState({ searchText });
+  };
+
+  render() {
+    return (
+      <div className={styles.app_wrapper}>
+        <div className={styles.main}>
+          <ErrorBoundary>
+            <SearchSection onSearch={this.handleSearch} />
+            <SearchResult searchText={this.state.searchText} />
+            <ErrorButton />
+          </ErrorBoundary>
+        </div>
+      </div>
+    );
+  }
+}
+
+export default App;
