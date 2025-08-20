@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import SearchSection from './SearchSection';
+import { BrowserRouter } from 'react-router-dom';
 
 describe('SearchSection component', (): void => {
   const LS_KEY = 'searchRow';
@@ -14,33 +15,53 @@ describe('SearchSection component', (): void => {
   });
 
   it('renders search input and search button', () => {
-    render(<SearchSection onSearch={mockOnSearch} />);
+    render(
+      <BrowserRouter>
+        <SearchSection onSearch={mockOnSearch} />
+      </BrowserRouter>
+    );
     expect(screen.getByPlaceholderText(PLACEHOLDER)).toBeInTheDocument();
     expect(screen.getByRole('button', BUTTON)).toBeInTheDocument();
   });
 
   it('displays saved search data from localStorage on mount', () => {
     localStorage.setItem(LS_KEY, 'pikachu');
-    render(<SearchSection onSearch={mockOnSearch} />);
+    render(
+      <BrowserRouter>
+        <SearchSection onSearch={mockOnSearch} />
+      </BrowserRouter>
+    );
     const input = screen.getByPlaceholderText(PLACEHOLDER) as HTMLInputElement;
     expect(input.value).toBe('pikachu');
   });
 
   it('shows empty input when no saved term exists', () => {
-    render(<SearchSection onSearch={mockOnSearch} />);
+    render(
+      <BrowserRouter>
+        <SearchSection onSearch={mockOnSearch} />
+      </BrowserRouter>
+    );
     const input = screen.getByPlaceholderText(PLACEHOLDER) as HTMLInputElement;
     expect(input.value).toBe('');
   });
 
   it('updates input value when user types', () => {
-    render(<SearchSection onSearch={mockOnSearch} />);
+    render(
+      <BrowserRouter>
+        <SearchSection onSearch={mockOnSearch} />
+      </BrowserRouter>
+    );
     const input = screen.getByPlaceholderText(PLACEHOLDER) as HTMLInputElement;
     fireEvent.change(input, { target: { value: 'bulbasaur' } });
     expect(input.value).toBe('bulbasaur');
   });
 
   it('saves search term to localStorage when search button is clicked', () => {
-    render(<SearchSection onSearch={mockOnSearch} />);
+    render(
+      <BrowserRouter>
+        <SearchSection onSearch={mockOnSearch} />
+      </BrowserRouter>
+    );
     const input = screen.getByPlaceholderText(PLACEHOLDER) as HTMLInputElement;
     const button = screen.getByRole('button', BUTTON) as HTMLButtonElement;
 
@@ -51,7 +72,11 @@ describe('SearchSection component', (): void => {
   });
 
   it('Trims whitespace from search input before saving', () => {
-    render(<SearchSection onSearch={mockOnSearch} />);
+    render(
+      <BrowserRouter>
+        <SearchSection onSearch={mockOnSearch} />
+      </BrowserRouter>
+    );
     const input = screen.getByPlaceholderText(PLACEHOLDER) as HTMLInputElement;
     const button = screen.getByRole('button', BUTTON);
 
@@ -64,14 +89,22 @@ describe('SearchSection component', (): void => {
 
   it('retrieves saved value from localStorage on mount', () => {
     localStorage.setItem(LS_KEY, 'pikachu');
-    render(<SearchSection onSearch={mockOnSearch} />);
+    render(
+      <BrowserRouter>
+        <SearchSection onSearch={mockOnSearch} />
+      </BrowserRouter>
+    );
     const input = screen.getByPlaceholderText(PLACEHOLDER) as HTMLInputElement;
     expect(input.value).toBe('pikachu');
   });
 
   it('overwrites old value in localStorage on new search', async () => {
     localStorage.setItem(LS_KEY, 'pikachu');
-    render(<SearchSection onSearch={mockOnSearch} />);
+    render(
+      <BrowserRouter>
+        <SearchSection onSearch={mockOnSearch} />
+      </BrowserRouter>
+    );
     const input = screen.getByPlaceholderText(PLACEHOLDER) as HTMLInputElement;
     const button = screen.getByRole('button', BUTTON);
 

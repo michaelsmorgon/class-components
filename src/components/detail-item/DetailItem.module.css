@@ -1,0 +1,120 @@
+.wrapper {
+  padding: 20px;
+}
+.item {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: row;
+}
+
+.item_info {
+  max-height: 461px;
+  display: flex;
+  flex-direction: row;
+  box-shadow: 5px 10px 10px 0px rgba(47, 128, 237, 0.25);
+  border-radius: 0px 5px 5px 0px;
+}
+
+.item_info:hover {
+  cursor: pointer;
+  transform: scale(1.02);
+  box-shadow: 5px 15px 25px rgba(0, 0, 0, 0.35);
+  background-color: rgba(255, 255, 255, 0.8);
+}
+
+.item_img {
+  width: 180px;
+  max-height: 180px;
+  object-fit: cover;
+  border-radius: 0px 0px 0px 5px;
+  box-shadow: 5px 10px 20px 0px rgba(51, 51, 51, 0.25);
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  width: 140px;
+  padding: 25px 15px 24px 15px;
+  border-radius: 0px 5px 5px 0px;
+  background-color: rgba(229, 229, 229, 1);
+  box-shadow: 5px 5px 20px 0px rgba(51, 51, 51, 0.25);
+}
+
+.header {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.title {
+  max-width: 240px;
+  font-family: Roboto;
+  font-size: 24px;
+  font-weight: 700;
+  line-height: 28px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: rgba(0, 0, 0, 1);
+}
+
+.title_desc {
+  padding: 4px 0px;
+  font-family: Roboto;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 16px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: rgba(0, 0, 0, 1);
+}
+
+.description {
+  max-height: 280px;
+  overflow: hidden;
+  font-family: Roboto;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+  letter-spacing: 0em;
+  text-align: left;
+  color: rgba(130, 130, 130, 1);
+}
+
+.stat-wrapper {
+  padding-top: 21px;
+  margin: auto auto 0 auto;
+}
+
+.btn_wrapper {
+  padding-top: 20px;
+  text-align: center;
+}
+
+.close_btn {
+  font-family: Roboto;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 14px;
+  letter-spacing: 0em;
+  text-align: center;
+  color: #ffffff;
+  border: none;
+  background-color: #d40c0c;
+  border-radius: 5px;
+  box-shadow: 2px 0px 4px 0px #d40c0c;
+  width: 100px;
+  height: 32px;
+}
+
+.close_btn:hover {
+  cursor: pointer;
+  box-shadow: none;
+  background-color: #ff5f5f;
+}
+
+.close_btn:active {
+  background-color: #832020;
+  transform: scale(0.98);
+}

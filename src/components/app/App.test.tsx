@@ -1,35 +1,48 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
 import App from './App';
-import fetchData from '../search-result/ApiRequest';
-import { pikachuData } from '../../test-utils/constants';
+import { describe, expect, test } from 'vitest';
 
-vi.mock('../search-result/ApiRequest', () => ({
-  default: vi.fn(),
-}));
+describe('App routing', () => {
+  const PLACEHOLDER = 'Type text here...';
+  const BUTTON = { name: /search/i };
 
-describe('App component', () => {
-  beforeEach(() => {
-    localStorage.clear();
-    vi.clearAllMocks();
-  });
-
-  it('makes initial API call on mount', async () => {
-    (fetchData as ReturnType<typeof vi.fn>).mockResolvedValueOnce(pikachuData);
-
-    render(<App />);
-
-    await waitFor(() => {
-      expect(fetchData).toHaveBeenCalled();
-    });
-  });
-
-  it('shows loading state during API call', async () => {
-    (fetchData as ReturnType<typeof vi.fn>).mockImplementation(
-      () => new Promise(() => {})
+  test('renders Main page at root path', () => {
+    render(
+      <MemoryRouter initialEntries={['/']}>
+        <App />
+      </MemoryRouter>
     );
+    expect(screen.getByPlaceholderText(PLACEHOLDER)).toBeInTheDocument();
+    expect(screen.getByRole('button', BUTTON)).toBeInTheDocument();
+  });
 
-    render(<App />);
-    expect(screen.getByText(/loading/i)).toBeInTheDocument();
+  test('renders AboutPage at /about path', () => {
+    render(
+      <MemoryRouter initialEntries={['/about']}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/Created by/i)).toBeInTheDocument();
+  });
+
+  test('renders Main for /details/:id route', () => {
+    render(
+      <MemoryRouter initialEntries={['/details/123']}>
+        <App />
+      </MemoryRouter>
+    );
+    // expect(screen.getByText(/main/i)).toBeInTheDocument();
+    expect(screen.getByPlaceholderText(PLACEHOLDER)).toBeInTheDocument();
+    expect(screen.getByRole('button', BUTTON)).toBeInTheDocument();
+  });
+
+  test('renders Not Found for unknown route', () => {
+    render(
+      <MemoryRouter initialEntries={['/unknown']}>
+        <App />
+      </MemoryRouter>
+    );
+    expect(screen.getByText(/Sorry, smth went wrong/i)).toBeInTheDocument();
   });
 });

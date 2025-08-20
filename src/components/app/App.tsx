@@ -1,41 +1,21 @@
 import styles from './App.module.css';
-import React from 'react';
-import SearchSection from '../search-section/SearchSection.tsx';
-import SearchResult from '../search-result/SearchResult.tsx';
-import ErrorBoundary from '../error-boundary/ErrorBoundary.tsx';
-import ErrorButton from '../error-button/ErrorButton.tsx';
-import { LS_SEARCH_ROW } from '../../utils/constants.ts';
+import { Route, Routes } from 'react-router-dom';
+import AboutPage from '../about-page/AboutPage.tsx';
+import MainLayout from '../main-layout/MainLayout.tsx';
+import MainContent from '../main-content/MainContent.tsx';
+import NotFound from '../not-found/NotFound.tsx';
 
-type AppState = {
-  searchText: string;
-};
-
-class App extends React.Component<Record<string, never>, AppState> {
-  constructor(props: Record<string, never>) {
-    super(props);
-    const searchText = localStorage.getItem(LS_SEARCH_ROW) || '';
-    this.state = {
-      searchText,
-    };
-  }
-
-  handleSearch = (searchText: string): void => {
-    this.setState({ searchText });
-  };
-
-  render() {
-    return (
-      <div className={styles.app_wrapper}>
-        <div className={styles.main}>
-          <ErrorBoundary>
-            <SearchSection onSearch={this.handleSearch} />
-            <SearchResult searchText={this.state.searchText} />
-            <ErrorButton />
-          </ErrorBoundary>
-        </div>
-      </div>
-    );
-  }
+export default function App() {
+  return (
+    <div className={styles.app_wrapper}>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<MainContent />} />
+          <Route path="details/:id" element={<MainContent />} />
+          <Route path="about" element={<AboutPage />} />
+          <Route path="*" element={<NotFound />} />
+        </Route>
+      </Routes>
+    </div>
+  );
 }
-
-export default App;

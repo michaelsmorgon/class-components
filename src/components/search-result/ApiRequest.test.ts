@@ -12,7 +12,7 @@ import {
 globalThis.fetch = mockFetch as ReturnType<typeof vi.fn>;
 
 const mockListResponse = {
-  count: 1,
+  count: 2,
   next: null,
   previous: null,
   results: [
@@ -22,9 +22,8 @@ const mockListResponse = {
 };
 
 const mockSuccessResponse = {
-  name: PIKACHU_NAME,
-  height: 4,
-  weight: 60,
+  count: 1,
+  data: [{ name: PIKACHU_NAME, height: 4, weight: 60 }],
 };
 
 beforeEach(() => {
@@ -36,12 +35,14 @@ describe('fetchData', () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: async () => mockSuccessResponse,
+      json: async () => {
+        return { name: PIKACHU_NAME, height: 4, weight: 60 };
+      },
     });
 
     const result = await fetchData(PIKACHU_NAME);
     expect(mockFetch).toHaveBeenCalledWith(URL + PIKACHU_NAME);
-    expect(result).toEqual([mockSuccessResponse]);
+    expect(result).toEqual(mockSuccessResponse);
   });
 
   it('returns list of data when no searchText is provided', async () => {
@@ -64,7 +65,7 @@ describe('fetchData', () => {
     });
 
     const result = await fetchData('');
-    expect(result).toEqual([pikachuData, bulbasaurData]);
+    expect(result).toEqual({ count: 2, data: [pikachuData, bulbasaurData] });
   });
 
   it('returns empty array if results is empty', async () => {
@@ -75,7 +76,7 @@ describe('fetchData', () => {
     });
 
     const result = await fetchData('');
-    expect(result).toEqual([]);
+    expect(result).toEqual({ count: 0, data: [] });
   });
 
   it('throws error on 404 response', async () => {

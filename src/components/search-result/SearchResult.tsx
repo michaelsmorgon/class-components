@@ -1,105 +1,111 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import styles from './SearchResult.module.css';
-import fetchData, { type DataResult } from './ApiRequest';
+import fetchData, {
+  getDetailInfo,
+  type DataResult,
+  type Result,
+} from './ApiRequest';
+import DetailItem from '../detail-item/DetailItem';
+import { useParams, useSearchParams } from 'react-router-dom';
+import Pagination from '../pagination/Pagination';
+import { COUNT_PER_PAGE } from '../../utils/constants';
 
 type Props = {
   searchText: string;
+  handleDetail: (data: DataResult | null) => void;
 };
 
-type State = {
-  data: DataResult[];
-  isLoading: boolean;
-  error: string | null;
-};
+export default function SearchResult(props: Props) {
+  const [data, setData] = useState<Result>({ count: 0, data: [] });
+  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingDetail, setIsLoadingDetail] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const { id } = useParams<{ id: string }>();
+  const [searchParams] = useSearchParams();
+  const page = searchParams.get('page') || '1';
+  const { handleDetail } = props;
 
-class SearchResult extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      data: [],
-      isLoading: false,
-      error: null,
-    };
-  }
-
-  async componentDidMount(): Promise<void> {
-    await this.runFetch();
-  }
-
-  async componentDidUpdate(prevProps: Readonly<Props>): Promise<void> {
-    if (prevProps.searchText !== this.props.searchText) {
-      await this.runFetch();
-    }
-  }
-
-  async runFetch(): Promise<void> {
-    try {
-      this.setState({ isLoading: true });
-      const result = await fetchData(this.props.searchText);
-      this.setState({ data: result, isLoading: false, error: null });
-    } catch (err) {
-      if (err instanceof Error) {
-        this.setState({ error: err.message, isLoading: false });
-        console.log('>>> Error: ', err);
-      } else {
-        this.setState({ error: 'Unexpected error', isLoading: false });
-        console.log('>>> Unknown error: ', err);
+  useEffect(() => {
+    const runFetch = async (): Promise<void> => {
+      try {
+        setError(null);
+        setIsLoading(true);
+        const result: Result = await fetchData(
+          props.searchText,
+          parseInt(page)
+        );
+        setData(result);
+        setIsLoading(false);
+      } catch (err) {
+        if (err instanceof Error) {
+          setIsLoading(false);
+          setError(err.message);
+          console.log('>>> Error: ', err);
+        } else {
+          setIsLoading(false);
+          setError('Unexpected error');
+          console.log('>>> Unknown error: ', err);
+        }
       }
-    }
-  }
+    };
+    runFetch();
+  }, [props.searchText, page]);
 
-  render(): React.ReactNode {
-    const { data, isLoading, error } = this.state;
+  useEffect(() => {
+    const runFetch = async (): Promise<void> => {
+      try {
+        if (id) {
+          handleDetail(null);
+          setIsLoadingDetail(true);
+          const result: DataResult = await getDetailInfo(id);
+          handleDetail(result);
+          setIsLoadingDetail(false);
+        }
+      } catch (err) {
+        if (err instanceof Error) {
+          setError(err.message);
+          console.log('>>> Error: ', err);
+        } else {
+          setError('Unexpected error');
+          console.log('>>> Unknown error: ', err);
+        }
+      }
+    };
+    runFetch();
+  }, [handleDetail, id]);
 
-    if (isLoading) {
-      return (
-        <div className={styles.search_result}>
-          <p>Loading...</p>
-        </div>
-      );
-    }
-
-    if (error) {
-      return (
-        <div className={styles.search_result}>
-          <p>Error Message: {error}</p>
-        </div>
-      );
-    }
-
-    if (data.length === 0) {
-      return (
-        <div className={styles.search_result}>
-          <div className={styles.row}>No data...</div>
-        </div>
-      );
-    }
-
+  if (isLoading || isLoadingDetail) {
     return (
       <div className={styles.search_result}>
-        <div className={styles.row}>
-          <div className={styles.cell}>
-            <strong>Name</strong>
-          </div>
-          <div className={styles.cell}>
-            <strong>Description</strong>
-          </div>
+        <div className={styles.loading}>
+          <p>Loading...</p>
         </div>
-
-        {data.map(({ name, height, weight }) => {
-          return (
-            <div className={styles.row} key={name}>
-              <div className={styles.cell}>{name}</div>
-              <div className={styles.cell}>
-                Height: {height}; Weight: {weight}
-              </div>
-            </div>
-          );
-        })}
       </div>
     );
   }
-}
 
-export default SearchResult;
+  if (error) {
+    return (
+      <div className={styles.search_result}>
+        <p>Error Message: {error}</p>
+      </div>
+    );
+  }
+
+  if (data.count === 0) {
+    return (
+      <div className={styles.search_result}>
+        <div className={styles.row}>No data...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.search_result}>
+      {data.data.map((item, index) => {
+        return <DetailItem item={item} key={index} />;
+      })}
+      {data.count >= COUNT_PER_PAGE && <Pagination page={page} />}
+    </div>
+  );
+}
