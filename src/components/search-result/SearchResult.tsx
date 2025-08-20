@@ -74,28 +74,38 @@ export default function SearchResult(props: Props) {
     runFetch();
   }, [handleDetail, id]);
 
-  return (
-    <>
+  if (isLoading || isLoadingDetail) {
+    return (
       <div className={styles.search_result}>
         <div className={styles.loading}>
-          {isLoading && <p>Loading...</p>}
-          {isLoadingDetail && <p>Loading...</p>}
+          <p>Loading...</p>
         </div>
-        {error && <p>Error Message: {error}</p>}
-        {!isLoading &&
-          !error &&
-          data.data.map((item, index) => {
-            return <DetailItem item={item} key={index} />;
-          })}
-        {!isLoading && !error && data.count >= COUNT_PER_PAGE && (
-          <Pagination page={page} />
-        )}
-        {!isLoading && !error && data.count === 0 && (
-          <div className={styles.row} key={0}>
-            No data...
-          </div>
-        )}
       </div>
-    </>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={styles.search_result}>
+        <p>Error Message: {error}</p>
+      </div>
+    );
+  }
+
+  if (data.count === 0) {
+    return (
+      <div className={styles.search_result}>
+        <div className={styles.row}>No data...</div>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.search_result}>
+      {data.data.map((item, index) => {
+        return <DetailItem item={item} key={index} />;
+      })}
+      {data.count >= COUNT_PER_PAGE && <Pagination page={page} />}
+    </div>
   );
 }
