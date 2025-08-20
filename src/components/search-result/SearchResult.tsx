@@ -89,12 +89,12 @@ class SearchResult extends React.Component<Props, State> {
           </div>
         </div>
 
-        {data.map((item) => {
+        {data.map(({ name, height, weight }) => {
           return (
-            <div className={styles.row} key={item.name}>
-              <div className={styles.cell}>{item.name}</div>
+            <div className={styles.row} key={name}>
+              <div className={styles.cell}>{name}</div>
               <div className={styles.cell}>
-                Height: {item.height}; Weight: {item.weight}
+                Height: {height}; Weight: {weight}
               </div>
             </div>
           );
