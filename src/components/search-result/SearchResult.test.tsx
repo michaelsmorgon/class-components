@@ -1,0 +1,104 @@
+import { describe, it, expect, type Mock, vi, beforeEach } from 'vitest';
+import { render, screen, waitFor } from '@testing-library/react';
+import SearchResult from './SearchResult';
+import fetchData, { type DataResult } from './ApiRequest';
+
+vi.mock('./ApiRequest', async () => ({
+  __esModule: true,
+  default: vi.fn(),
+}));
+
+const mockedFetchData = fetchData as Mock;
+
+describe('SearchResult component', (): void => {
+  const mockData: DataResult[] = [
+    { name: 'bulbasaur', height: 7, weight: 69 },
+    { name: 'charmander', height: 6, weight: 85 },
+    { name: 'pikachu', height: 4, weight: 99 },
+  ];
+
+  beforeEach(() => {
+    mockedFetchData.mockReset();
+  });
+
+  it('Renders correct number of items when data is provided', async () => {
+    mockedFetchData.mockResolvedValueOnce(mockData);
+    render(<SearchResult searchText="" />);
+
+    await waitFor(() => {
+      expect(screen.getByText('bulbasaur')).toBeInTheDocument();
+      expect(screen.getByText('charmander')).toBeInTheDocument();
+      expect(screen.getByText('pikachu')).toBeInTheDocument();
+    });
+
+    const rowCount = screen.getAllByText(/Height:/i);
+    expect(rowCount.length).toBe(3);
+  });
+
+  it('displays "no results" message when data array is empty', async () => {
+    mockedFetchData.mockResolvedValueOnce([]);
+    render(<SearchResult searchText="" />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/no data/i)).toBeInTheDocument();
+    });
+  });
+
+  it('shows loading state while fetching data', async () => {
+    mockedFetchData.mockResolvedValueOnce(mockData);
+    render(<SearchResult searchText="" />);
+
+    expect(screen.getByText(/loading.../i)).toBeInTheDocument();
+
+    await waitFor(() => {
+      expect(screen.queryByText(/loading.../i)).not.toBeInTheDocument();
+    });
+  });
+
+  it('correctly displays item names and descriptions', async () => {
+    mockedFetchData.mockResolvedValueOnce([
+      { name: 'bulbasaur', height: 7, weight: 69 },
+    ]);
+    render(<SearchResult searchText="" />);
+
+    await waitFor(() => {
+      expect(screen.getByText('bulbasaur')).toBeInTheDocument();
+      expect(screen.getByText(/height: 7/i)).toBeInTheDocument();
+      expect(screen.getByText(/weight: 69/i)).toBeInTheDocument();
+    });
+  });
+
+  it('handles missing or undefined data gracefully', async () => {
+    mockedFetchData.mockResolvedValueOnce([
+      { name: '', height: NaN, weight: NaN },
+    ]);
+    render(<SearchResult searchText="" />);
+
+    await waitFor(() => {
+      expect(screen.getByText(/height: NaN/i)).toBeInTheDocument();
+      expect(screen.getByText(/weight: NaN/i)).toBeInTheDocument();
+    });
+  });
+
+  it('displays error message when API call fails', async () => {
+    mockedFetchData.mockRejectedValueOnce(new Error('Test error'));
+    render(<SearchResult searchText="" />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Error Message: test error/i)
+      ).toBeInTheDocument();
+    });
+  });
+
+  it('shows appropriate error for different HTTP status codes (4xx, 5xx)', async () => {
+    mockedFetchData.mockRejectedValueOnce(new Error('API error: 404'));
+    render(<SearchResult searchText="error 404" />);
+
+    await waitFor(() => {
+      expect(
+        screen.getByText(/Error Message: api error: 404/i)
+      ).toBeInTheDocument();
+    });
+  });
+});

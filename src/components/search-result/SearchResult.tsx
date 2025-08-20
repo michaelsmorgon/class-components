@@ -71,9 +71,7 @@ class SearchResult extends React.Component<Props, State> {
     if (data.length === 0) {
       return (
         <div className={styles.search_result}>
-          <div className={styles.row} key={0}>
-            No data...
-          </div>
+          <div className={styles.row}>No data...</div>
         </div>
       );
     }
@@ -89,12 +87,12 @@ class SearchResult extends React.Component<Props, State> {
           </div>
         </div>
 
-        {data.map((item, index) => {
+        {data.map(({ name, height, weight }) => {
           return (
-            <div className={styles.row} key={index}>
-              <div className={styles.cell}>{item.name}</div>
+            <div className={styles.row} key={name}>
+              <div className={styles.cell}>{name}</div>
               <div className={styles.cell}>
-                Height: {item.height}; Weight: {item.weight}
+                Height: {height}; Weight: {weight}
               </div>
             </div>
           );
